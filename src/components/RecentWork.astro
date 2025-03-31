@@ -5,7 +5,7 @@ import { POSTS } from '@/lib/queries';
 import { formatPostDate } from '@/lib/date';
 import type { PostsResponse, SearchVariables, Post } from '@/types/graphql';
 import { checkThumbnails } from '@/lib/ownThumbnail';
-import { getLangFromUrl } from '@/i18n/utils';
+import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 
 const variables: SearchVariables = {
   start: 0,
@@ -16,6 +16,7 @@ const { posts } = await graphqlClient.request<PostsResponse>(POSTS, variables);
 const processedPosts: Post[] = posts.data.map(checkThumbnails).slice(0, 6);
 
 const lang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(lang);
 ---
 
 <section class="w-full bg-black text-white">
@@ -28,7 +29,7 @@ const lang = getLangFromUrl(Astro.url);
         {
           processedPosts.map((post) => (
             <a
-              href={`/${lang}/album/${post.slug}`}
+              href={`${translatePath('/archive')}/album/${post.slug}`}
               class="group relative overflow-hidden"
             >
               <Image
