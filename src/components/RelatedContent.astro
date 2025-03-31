@@ -1,0 +1,59 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
+import { checkThumbnails } from '../lib/ownThumbnail';
+import { Image } from 'astro:assets';
+import { formatPostDate } from '@/lib/date';
+import BlurHashImage from './BlurHashImage.astro';
+
+export interface Props {
+  relatedPosts: any[];
+  title: string;
+  postId: string;
+  className?: string;
+  type: 'artist' | 'venue';
+}
+
+const { relatedPosts, title, postId, className = '', type } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(lang);
+const filteredPosts = relatedPosts
+  .filter((p) => p.id !== postId)
+  .map(checkThumbnails)
+  .slice(0, 4);
+---
+
+<section class:list={['container', className]}>
+  <h2 class="text-2xl font-bold mb-4">{title}</h2>
+  <div
+    class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
+  >
+    {
+      filteredPosts.map((post) => (
+        <a
+          href={`${translatePath('/album')}/${post.slug}`}
+          class="group relative overflow-hidden"
+        >
+          <BlurHashImage
+            src={`https://images.wannabes.be/S=W600,H400,PD1/${post.thumbnail.hires}`}
+            alt={`${post.artist.name} at ${post.venue.name}`}
+            class="w-full h-[350px] object-cover transition-transform duration-300 group-hover:scale-105 md:transform-none md:group-hover:scale-105"
+            loading="lazy"
+            width={600}
+            height={400}
+            blurhash={post.thumbnail.blurhash}
+          />
+          <div class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <div class="text-center">
+              <p class="text-white text-xl font-semibold">
+                {type === 'artist' ? post.venue.name : post.artist.name}
+              </p>
+              <p class="text-white/80 text-sm mt-1">
+                {formatPostDate(post.date)}
+              </p>
+            </div>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>

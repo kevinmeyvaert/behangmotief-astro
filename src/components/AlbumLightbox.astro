@@ -1,0 +1,318 @@
+---
+interface Props {
+  alt: string;
+}
+
+const { alt } = Astro.props;
+---
+
+<div class="album-lightbox">
+  <div
+    class="lightbox-overlay hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+    data-lightbox-overlay
+  >
+    <button
+      class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+      data-lightbox-close
+      aria-label="Close lightbox"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <button
+      class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+      data-lightbox-prev
+      aria-label="Previous image"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+      </svg>
+    </button>
+    <button
+      class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+      data-lightbox-next
+      aria-label="Next image"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+      </svg>
+    </button>
+    <div class="relative flex items-center justify-center w-full h-full p-4">
+      <div class="relative w-auto h-auto">
+        <div
+          class="absolute inset-0 flex items-center justify-center"
+          data-lightbox-blurhash
+        >
+          <div
+            class="bg-center bg-cover bg-no-repeat opacity-100 transition-opacity duration-300"
+          >
+          </div>
+        </div>
+        <div
+          class="absolute inset-0 flex items-center justify-center z-10"
+          data-lightbox-spinner
+        >
+          <div
+            class="animate-spin rounded-full h-10 w-10 border-2 border-white/20 border-t-white"
+          >
+          </div>
+        </div>
+        <img
+          src=""
+          alt={alt}
+          class="relative max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain opacity-0 transition-opacity duration-300"
+          data-lightbox-image
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { decode } from 'blurhash';
+
+  class AlbumLightbox {
+    private currentIndex: number = 0;
+    private triggerElements: HTMLElement[];
+    private overlay: HTMLElement;
+    private img: HTMLImageElement;
+    private spinner: HTMLElement;
+    private blurhashEl: HTMLElement;
+
+    constructor(element: HTMLElement, triggerElements: HTMLElement[]) {
+      this.triggerElements = triggerElements;
+      this.overlay = element.querySelector('[data-lightbox-overlay]')!;
+      this.img = element.querySelector('[data-lightbox-image]')!;
+      this.spinner = element.querySelector('[data-lightbox-spinner]')!;
+      this.blurhashEl = element.querySelector('[data-lightbox-blurhash]')!;
+
+      const closeButton = element.querySelector('[data-lightbox-close]');
+      const prevButton = element.querySelector('[data-lightbox-prev]');
+      const nextButton = element.querySelector('[data-lightbox-next]');
+
+      // Handle image load events
+      this.img.addEventListener('load', () => {
+        this.spinner.style.display = 'none';
+        this.img.classList.remove('opacity-0');
+        const blurhashDiv = this.blurhashEl.querySelector('div');
+        if (blurhashDiv) {
+          blurhashDiv.classList.add('opacity-0');
+        }
+      });
+
+      triggerElements.forEach((trigger, index) => {
+        trigger.addEventListener('click', () => this.openLightbox(index));
+      });
+
+      closeButton?.addEventListener('click', () => this.closeLightbox());
+      prevButton?.addEventListener('click', () => this.showPrevImage());
+      nextButton?.addEventListener('click', () => this.showNextImage());
+
+      this.overlay.addEventListener('click', (e) => {
+        if (e.target === this.overlay) {
+          this.closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!this.overlay.classList.contains('hidden')) {
+          switch (e.key) {
+            case 'Escape':
+              this.closeLightbox();
+              break;
+            case 'ArrowLeft':
+              this.showPrevImage();
+              break;
+            case 'ArrowRight':
+              this.showNextImage();
+              break;
+          }
+        }
+      });
+    }
+
+    private getCurrentTrigger(): HTMLElement {
+      return this.triggerElements[this.currentIndex];
+    }
+
+    private getImageData(trigger: HTMLElement) {
+      return {
+        url: trigger.getAttribute('data-full-image')!,
+        blurhash: trigger.getAttribute('data-blurhash') || '',
+        width: parseInt(trigger.getAttribute('data-width') || '0', 10),
+        height: parseInt(trigger.getAttribute('data-height') || '0', 10),
+      };
+    }
+
+    private calculateBlurhashSize(
+      width: number,
+      height: number
+    ): { width: number; height: number } {
+      const viewportWidth = window.innerWidth * 0.9;
+      const viewportHeight = window.innerHeight * 0.9;
+      const aspectRatio = width / height;
+
+      if (width > height) {
+        // Landscape - fill width if possible
+        const proposedHeight = viewportWidth / aspectRatio;
+        if (proposedHeight <= viewportHeight) {
+          return {
+            width: viewportWidth,
+            height: proposedHeight,
+          };
+        } else {
+          return {
+            width: viewportHeight * aspectRatio,
+            height: viewportHeight,
+          };
+        }
+      } else {
+        // Portrait - fill height if possible
+        const proposedWidth = viewportHeight * aspectRatio;
+        if (proposedWidth <= viewportWidth) {
+          return {
+            width: proposedWidth,
+            height: viewportHeight,
+          };
+        } else {
+          return {
+            width: viewportWidth,
+            height: viewportWidth / aspectRatio,
+          };
+        }
+      }
+    }
+
+    private async setBlurhashBackground(
+      blurhash: string,
+      width: number,
+      height: number
+    ) {
+      try {
+        if (!blurhash || blurhash.length < 6) {
+          console.warn('Invalid blurhash:', blurhash);
+          return;
+        }
+
+        const pixels = decode(blurhash, 32, 32);
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const imageData = ctx.createImageData(32, 32);
+        imageData.data.set(pixels);
+        ctx.putImageData(imageData, 0, 0);
+        const blurhashDiv = this.blurhashEl.querySelector('div');
+        if (blurhashDiv) {
+          const size = this.calculateBlurhashSize(width, height);
+          blurhashDiv.style.width = `${size.width}px`;
+          blurhashDiv.style.height = `${size.height}px`;
+          blurhashDiv.style.backgroundImage = `url(${canvas.toDataURL()})`;
+          blurhashDiv.classList.remove('opacity-0');
+        }
+      } catch (error) {
+        console.error('Error decoding blurhash:', error);
+        const blurhashDiv = this.blurhashEl.querySelector('div');
+        if (blurhashDiv) {
+          blurhashDiv.classList.add('opacity-0');
+        }
+      }
+    }
+
+    private openLightbox(index: number) {
+      this.currentIndex = index;
+      this.overlay.classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      this.updateImage();
+    }
+
+    private closeLightbox() {
+      this.overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      this.img.classList.add('opacity-0');
+      const blurhashDiv = this.blurhashEl.querySelector('div');
+      if (blurhashDiv) {
+        blurhashDiv.classList.add('opacity-0');
+      }
+    }
+
+    private showPrevImage() {
+      this.currentIndex =
+        (this.currentIndex - 1 + this.triggerElements.length) %
+        this.triggerElements.length;
+      this.updateImage();
+    }
+
+    private showNextImage() {
+      this.currentIndex = (this.currentIndex + 1) % this.triggerElements.length;
+      this.updateImage();
+    }
+
+    private updateImage() {
+      const trigger = this.getCurrentTrigger();
+      const imageData = this.getImageData(trigger);
+
+      // Show spinner and reset states
+      this.spinner.style.display = 'flex';
+      this.img.classList.add('opacity-0');
+      const blurhashDiv = this.blurhashEl.querySelector('div');
+      if (blurhashDiv) {
+        blurhashDiv.classList.remove('opacity-0');
+      }
+
+      // Set blurhash and load image
+      this.setBlurhashBackground(
+        imageData.blurhash,
+        imageData.width,
+        imageData.height
+      );
+      this.img.src = imageData.url;
+    }
+  }
+
+  // Initialize the lightbox
+  const lightboxElement = document.querySelector('.album-lightbox');
+  const triggerElements = document.querySelectorAll(
+    '[data-album-image-trigger]'
+  );
+
+  if (lightboxElement && triggerElements.length > 0) {
+    new AlbumLightbox(
+      lightboxElement as HTMLElement,
+      Array.from(triggerElements) as HTMLElement[]
+    );
+  }
+</script>

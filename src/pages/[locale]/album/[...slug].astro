@@ -1,0 +1,128 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+import { graphqlClient } from '@/lib/graphql-client';
+import { ALBUM, RELATED_ALBUMS } from '@/lib/queries';
+import { routes } from '@/i18n/ui';
+import AlbumLightbox from '@/components/AlbumLightbox.astro';
+import BlurHashImage from '@/components/BlurHashImage.astro';
+import Header from '@/components/Header.astro';
+import { formatPostDate } from '@/lib/date';
+import RelatedContent from '@/components/RelatedContent.astro';
+
+interface AlbumImage {
+  hires: string;
+  blurhash: string;
+  dimensions?: { width: number; height: number };
+}
+
+const { slug } = Astro.params;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Join the slug array into a path string
+const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
+
+// Fetch the album data
+const { post } = await graphqlClient.request(ALBUM, { slug: slugPath });
+
+const { sameArtist, sameVenue } = await graphqlClient.request(RELATED_ALBUMS, {
+  artistSlug: post.artist.slug,
+  venueSlug: post.venue.slug,
+});
+const hasMoreFromArtist = sameArtist.data?.length - 1 > 0;
+const hasMoreAtVenue = sameVenue.data?.length - 1 > 0;
+
+// Get a random description from the translations
+const descriptions = (venue?: string, artist?: string) => {
+  const descriptionTemplates = t('album.descriptions');
+  const randomIndex = Math.floor(Math.random() * descriptionTemplates.length);
+  const template = descriptionTemplates[randomIndex];
+  return template
+    .replace('{venue}', venue || '')
+    .replace('{artist}', artist || '');
+};
+
+const description = descriptions(post.venue.name, post.artist.name);
+
+export async function getStaticPaths() {
+  return Object.entries(routes).map(([locale, r]) => ({
+    params: { locale, album: r.album, slug: ['default'] },
+  }));
+}
+---
+
+<Layout
+  title={`${post.artist.name} live at ${post.venue.name} | Behangmotief`}
+  description={description}
+>
+  <Header />
+  <main class="container mx-auto px-4 py-8">
+    <article>
+      <header class="text-center mb-12">
+        <h1 class="text-4xl font-bold">{post.artist.name}</h1>
+        <p class="text-gray-500">
+          <time>{formatPostDate(post.date)}</time> – {post.venue.name}
+        </p>
+      </header>
+
+      <div
+        class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 lg:gap-8 mb-12"
+      >
+        {
+          post.images.map((image: AlbumImage) => (
+            <div
+              class="aspect-square overflow-hidden cursor-pointer"
+              style={{
+                boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
+              }}
+              data-album-image-trigger
+              data-full-image={`https://images.wannabes.be/S=W2500,H2500,PD1/${image.hires}`}
+              data-blurhash={image.blurhash}
+              data-width={image.dimensions?.width || 800}
+              data-height={image.dimensions?.height || 800}
+            >
+              <BlurHashImage
+                src={`https://images.wannabes.be/S=W500,H500,PD1/C=SQ/${image.hires}`}
+                alt={`${post.artist.name} at ${post.venue.name}`}
+                width={500}
+                height={500}
+                blurhash={image.blurhash}
+                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                loading="eager"
+              />
+            </div>
+          ))
+        }
+      </div>
+      <AlbumLightbox alt={`${post.artist.name} at ${post.venue.name}`} />
+      {
+        hasMoreFromArtist && (
+          <RelatedContent
+            server:defer
+            relatedPosts={sameArtist.data}
+            title={t('album.more_from_artist').replace(
+              '{artist}',
+              post.artist.name
+            )}
+            postId={post.id}
+            type="artist"
+            className="mb-12"
+          />
+        )
+      }
+      {
+        hasMoreAtVenue && (
+          <RelatedContent
+            server:defer
+            relatedPosts={sameVenue.data}
+            title={t('album.more_at_venue').replace('{venue}', post.venue.name)}
+            postId={post.id}
+            type="venue"
+            className="mb-12"
+          />
+        )
+      }
+    </article>
+  </main>
+</Layout>

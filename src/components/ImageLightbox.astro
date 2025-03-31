@@ -1,0 +1,94 @@
+---
+import Image from 'astro/components/Image.astro';
+
+interface Props {
+  imageSrc: string;
+  imageAlt: string;
+}
+
+const { imageSrc, imageAlt } = Astro.props;
+---
+
+<div class="image-lightbox">
+  <div class="w-full h-[600px] cursor-zoom-in" data-lightbox-trigger>
+    <Image
+      src={imageSrc}
+      alt={imageAlt}
+      class="w-full h-full object-cover"
+      width={2500}
+      height={1875}
+    />
+  </div>
+  <div
+    class="lightbox-overlay hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+    data-lightbox-overlay
+  >
+    <button
+      class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 cursor-pointer"
+      data-lightbox-close
+      aria-label="Close lightbox"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <img
+      src={imageSrc}
+      alt={imageAlt}
+      class="max-h-[90vh] max-w-[90vw] object-contain"
+      data-lightbox-image
+    />
+  </div>
+</div>
+
+<script>
+  class ImageLightbox {
+    constructor(element: HTMLElement) {
+      const trigger = element.querySelector('[data-lightbox-trigger]');
+      const overlay = element.querySelector('[data-lightbox-overlay]');
+      const closeButton = element.querySelector('[data-lightbox-close]');
+
+      if (!trigger || !overlay || !closeButton) return;
+
+      const openLightbox = () => {
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const closeLightbox = () => {
+        overlay.classList.add('hidden');
+        document.body.style.overflow = '';
+      };
+
+      trigger.addEventListener('click', openLightbox);
+      closeButton.addEventListener('click', closeLightbox);
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+          closeLightbox();
+        }
+      });
+
+      // Handle keyboard events
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !overlay.classList.contains('hidden')) {
+          closeLightbox();
+        }
+      });
+    }
+  }
+
+  // Initialize all lightboxes on the page
+  document.querySelectorAll('.image-lightbox').forEach((element) => {
+    new ImageLightbox(element as HTMLElement);
+  });
+</script>

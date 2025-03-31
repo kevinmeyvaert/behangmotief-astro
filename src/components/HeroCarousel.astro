@@ -1,0 +1,132 @@
+---
+import Image from 'astro/components/Image.astro';
+
+interface Props {
+  images: {
+    src: string;
+    alt: string;
+  }[];
+}
+
+const { images } = Astro.props;
+---
+
+<div class="w-full h-full overflow-hidden relative" id="carousel">
+  <div class="h-full flex transition-transform duration-500 ease-out">
+    {
+      images.map((image, index) => (
+        <div class="w-full h-full flex-none">
+          <div class="relative h-full">
+            <Image
+              src={image.src}
+              alt={image.alt}
+              loading={index === 0 || index === 1 ? 'eager' : 'lazy'}
+              class="w-full h-full object-cover"
+              inferSize
+            />
+            <div class="absolute inset-0 bg-black/30" />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <button
+    class="absolute top-1/2 -translate-y-1/2 left-4 bg-white/70 hover:bg-white/90 rounded-full p-2 transition cursor-pointer"
+    id="prevButton"
+    aria-label="Previous slide"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+    </svg>
+  </button>
+  <button
+    class="absolute top-1/2 -translate-y-1/2 right-4 bg-white/70 hover:bg-white/90 rounded-full p-2 transition cursor-pointer"
+    id="nextButton"
+    aria-label="Next slide"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      class="w-6 h-6"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+    </svg>
+  </button>
+</div>
+
+<script>
+  class Carousel {
+    constructor(element: HTMLElement) {
+      const container = element.querySelector('div') as HTMLElement;
+      const prevButton = element.querySelector(
+        '#prevButton'
+      ) as HTMLButtonElement;
+      const nextButton = element.querySelector(
+        '#nextButton'
+      ) as HTMLButtonElement;
+      const slides = container.children;
+      let currentIndex = 0;
+      let autoplayInterval: number;
+
+      const updateSlidePosition = () => {
+        const offset = -currentIndex * 100;
+        container.style.transform = `translateX(${offset}%)`;
+      };
+
+      const goToSlide = (index: number) => {
+        currentIndex = (index + slides.length) % slides.length;
+        updateSlidePosition();
+      };
+
+      const nextSlide = () => goToSlide(currentIndex + 1);
+      const prevSlide = () => goToSlide(currentIndex - 1);
+
+      const startAutoplay = () => {
+        autoplayInterval = setInterval(nextSlide, 4000);
+      };
+
+      const stopAutoplay = () => {
+        clearInterval(autoplayInterval);
+      };
+
+      // Event listeners
+      prevButton.addEventListener('click', () => {
+        prevSlide();
+        stopAutoplay();
+      });
+
+      nextButton.addEventListener('click', () => {
+        nextSlide();
+        stopAutoplay();
+      });
+
+      element.addEventListener('mouseenter', stopAutoplay);
+      element.addEventListener('mouseleave', startAutoplay);
+
+      // Initialize
+      updateSlidePosition();
+      startAutoplay();
+    }
+  }
+
+  // Initialize all carousels on the page
+  document.querySelectorAll('#carousel').forEach((element) => {
+    new Carousel(element as HTMLElement);
+  });
+</script>

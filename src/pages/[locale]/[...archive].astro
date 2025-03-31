@@ -1,0 +1,27 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { routes } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  return Object.entries(routes).map(([locale, r]) => ({
+    params: { locale, archive: r.archive },
+  }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+// Get search param if it exists
+const searchParam = Astro.url.searchParams.get('search') || '';
+---
+
+<Layout title={t('archive.title')} description={t('archive.description')}>
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-6">{t('archive.title')}</h1>
+    <p class="text-gray-600 mb-8">{t('archive.description')}</p>
+
+    <!-- Add your archive content here -->
+    {searchParam && <p class="mb-4">Showing results for: {searchParam}</p>}
+  </main>
+</Layout>

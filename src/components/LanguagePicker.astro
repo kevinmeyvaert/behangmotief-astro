@@ -1,0 +1,17 @@
+---
+import { getLangFromUrl } from '@/i18n/utils';
+import { languages } from '../i18n/ui';
+
+const lang = getLangFromUrl(Astro.url);
+const route = Astro.url.pathname.replace(`/${lang}`, '');
+---
+
+<ul>
+  {
+    Object.entries(languages).map(([lang, label]) => (
+      <li>
+        <a href={`/${lang}/${route || ''}`}>{label}</a>
+      </li>
+    ))
+  }
+</ul>
