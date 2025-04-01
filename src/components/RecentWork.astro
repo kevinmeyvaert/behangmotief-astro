@@ -29,7 +29,7 @@ const translatePath = useTranslatedPath(lang);
         {
           processedPosts.map((post) => (
             <a
-              href={`${translatePath('/archive')}/album/${post.slug}`}
+              href={`${translatePath('/album')}/${post.slug}`}
               class="group relative overflow-hidden"
             >
               <Image
