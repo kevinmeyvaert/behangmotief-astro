@@ -4,6 +4,7 @@ import BlurHashImage from './BlurHashImage.astro';
 import { formatPostDate } from '@/lib/date';
 
 interface Props {
+  loading: 'lazy' | 'eager';
   posts: {
     id: string;
     slug: string;
@@ -20,7 +21,7 @@ interface Props {
   }[];
 }
 
-const { posts } = Astro.props;
+const { posts, loading } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 ---
@@ -41,6 +42,7 @@ const translatePath = useTranslatedPath(lang);
             alt={`${post.artist.name} at ${post.venue.name}`}
             width={post.thumbnail.dimensions.width}
             height={post.thumbnail.dimensions.height}
+            loading={loading}
             class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">

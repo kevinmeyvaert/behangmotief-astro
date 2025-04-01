@@ -91,6 +91,8 @@ export const ui = {
     'pagination.aria.previous': 'Previous page',
     'pagination.aria.next': 'Next page',
     'pagination.aria.current': 'Current page',
+    'search.placeholder': 'Search artist, venue or festival...',
+    'search.button.aria': 'Search',
   },
   nl: {
     'archive.title': 'Archief | Behangmotief — Muziek & festival fotograaf',
@@ -164,5 +166,7 @@ export const ui = {
     'pagination.aria.previous': 'Vorige pagina',
     'pagination.aria.next': 'Volgende pagina',
     'pagination.aria.current': 'Huidige pagina',
+    'search.placeholder': 'Zoek een artiest, locatie of festival...',
+    'search.button.aria': 'Zoeken',
   },
 } as const;

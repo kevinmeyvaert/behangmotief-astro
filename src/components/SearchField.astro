@@ -1,0 +1,44 @@
+---
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+const { currentSearch = '', archiveRoute } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<form
+  method="get"
+  action={archiveRoute}
+  class="w-full md:max-w-md mx-auto mb-8"
+>
+  <div class="relative">
+    <input
+      type="search"
+      name="search"
+      value={currentSearch}
+      placeholder={t('search.placeholder')}
+      class="appearance-none w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-card text-card-foreground"
+      autocomplete="off"
+    />
+    <button
+      type="submit"
+      class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-foreground cursor-pointer bg-white"
+      aria-label={t('search.button.aria')}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </button>
+  </div>
+</form>

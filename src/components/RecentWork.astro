@@ -1,10 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import { graphqlClient } from '@/lib/graphql-client';
 import { POSTS } from '@/lib/queries';
-import { formatPostDate } from '@/lib/date';
 import type { PostsResponse, SearchVariables, Post } from '@/types/graphql';
-import { checkThumbnails } from '@/lib/ownThumbnail';
 import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import PostGrid from './PostGrid.astro';
 
@@ -25,7 +22,7 @@ const translatePath = useTranslatedPath(lang);
       <h2 class="text-3xl font-bold mb-12 border-b-2 border-white inline-block">
         Recent Work
       </h2>
-      <PostGrid posts={posts.data} />
+      <PostGrid posts={posts.data} loading="lazy" />
     </div>
   </div>
 </section>
