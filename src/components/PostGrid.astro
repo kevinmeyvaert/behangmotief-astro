@@ -45,11 +45,12 @@ const translatePath = useTranslatedPath(lang);
             loading={loading}
             class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-            <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-col items-center justify-center h-full">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-100">
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-row items-center justify-between">
               <h2 class="font-bold text-lg uppercase">{post.artist.name}</h2>
-              <p class="text-md opacity-90">{post.venue.name}</p>
-              <p class="text-md opacity-75">{formatPostDate(post.date)}</p>
+              <p class="text-sm opacity-75">
+                {post.venue.name} — {formatPostDate(post.date)}
+              </p>
             </div>
           </div>
         </article>

@@ -27,16 +27,6 @@ const {
 const pixels = decode(blurhash, 32, 32);
 const buffer = Buffer.from(pixels);
 
-// Create a raw image buffer
-const rawImageData = {
-  data: buffer,
-  info: {
-    width: 32,
-    height: 32,
-    channels: 4,
-  },
-};
-
 // Convert to PNG and get base64
 const sharpImage = sharp(buffer, {
   raw: {

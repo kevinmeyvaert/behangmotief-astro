@@ -29,29 +29,31 @@ const filteredPosts = relatedPosts
   >
     {
       filteredPosts.map((post) => (
-        <a
-          href={`${translatePath('/album')}/${post.slug}`}
-          class="group relative overflow-hidden"
-        >
-          <BlurHashImage
-            src={`https://images.wannabes.be/S=W600,H400,PD1/${post.thumbnail.hires}`}
-            alt={`${post.artist.name} at ${post.venue.name}`}
-            class="w-full h-[350px] object-cover transition-transform duration-300 group-hover:scale-105 md:transform-none md:group-hover:scale-105"
-            loading="lazy"
-            width={600}
-            height={400}
-            blurhash={post.thumbnail.blurhash}
-          />
-          <div class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <div class="text-center">
-              <p class="text-white text-xl font-semibold">
-                {type === 'artist' ? post.venue.name : post.artist.name}
-              </p>
-              <p class="text-white/80 text-sm mt-1">
-                {formatPostDate(post.date)}
-              </p>
+        <a href={`${translatePath('/album')}/${post.slug}`} class="group">
+          <article
+            class="relative overflow-hidden"
+            style={{
+              boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
+            }}
+          >
+            <BlurHashImage
+              blurhash={post.thumbnail.blurhash}
+              src={`https://images.wannabes.be/S=W1500,H1500,PD1/${post.thumbnail.hires}`}
+              alt={`${post.artist.name} at ${post.venue.name}`}
+              width={post.thumbnail.dimensions.width}
+              height={post.thumbnail.dimensions.height}
+              loading="lazy"
+              class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-100">
+              <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-row items-center justify-between">
+                <h2 class="font-bold text-lg uppercase">
+                  {type === 'artist' ? post.venue.name : post.artist.name}
+                </h2>
+                <p class="text-sm opacity-75">{formatPostDate(post.date)}</p>
+              </div>
             </div>
-          </div>
+          </article>
         </a>
       ))
     }

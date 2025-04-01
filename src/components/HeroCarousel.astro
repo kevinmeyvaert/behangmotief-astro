@@ -1,20 +1,48 @@
 ---
 import Image from 'astro/components/Image.astro';
+import { decode } from 'blurhash';
+import sharp from 'sharp';
 
 interface Props {
   images: {
     src: string;
     alt: string;
+    blurhash: string;
   }[];
 }
 
 const { images } = Astro.props;
+
+async function getDataUrlFromBlurhash(blurhash: string) {
+  const pixels = decode(blurhash, 32, 32);
+  const buffer = Buffer.from(pixels);
+
+  const sharpImage = sharp(buffer, {
+    raw: {
+      width: 32,
+      height: 32,
+      channels: 4,
+    },
+  });
+
+  return await sharpImage
+    .png()
+    .toBuffer()
+    .then((buffer) => `data:image/png;base64,${buffer.toString('base64')}`);
+}
+
+const imagesWithPlaceholder = await Promise.all(
+  images.map(async (image) => ({
+    ...image,
+    placeholder: await getDataUrlFromBlurhash(image.blurhash),
+  }))
+);
 ---
 
 <div class="w-full h-full overflow-hidden relative" id="carousel">
   <div class="h-full flex transition-transform duration-500 ease-out">
     {
-      images.map((image, index) => (
+      imagesWithPlaceholder.map((image, index) => (
         <div class="w-full h-full flex-none">
           <div class="relative h-full">
             <Image
@@ -23,6 +51,7 @@ const { images } = Astro.props;
               loading={index === 0 || index === 1 ? 'eager' : 'lazy'}
               class="w-full h-full object-cover"
               inferSize
+              style={`background: url(${image.placeholder}); background-size: cover; background-position: center;`}
             />
             <div class="absolute inset-0 bg-black/30" />
           </div>
