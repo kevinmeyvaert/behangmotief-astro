@@ -1,0 +1,57 @@
+---
+import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
+import BlurHashImage from './BlurHashImage.astro';
+import { formatPostDate } from '@/lib/date';
+
+interface Props {
+  posts: {
+    id: string;
+    slug: string;
+    artist: { name: string };
+    venue: { name: string };
+    event: { name: string };
+    date: string;
+    thumbnail: {
+      blurhash: string;
+      hires: string;
+      dimensions: { width: number; height: number };
+      photographer: { firstName: string };
+    };
+  }[];
+}
+
+const { posts } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const translatePath = useTranslatedPath(lang);
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {
+    posts.map((post) => (
+      <a href={`${translatePath('/album')}/${post.slug}`} class="group">
+        <article
+          class="relative overflow-hidden"
+          style={{
+            boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <BlurHashImage
+            blurhash={post.thumbnail.blurhash}
+            src={`https://images.wannabes.be/S=W1500,H1500,PD1/${post.thumbnail.hires}`}
+            alt={`${post.artist.name} at ${post.venue.name}`}
+            width={post.thumbnail.dimensions.width}
+            height={post.thumbnail.dimensions.height}
+            class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
+            <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-col items-center justify-center h-full">
+              <h2 class="font-bold text-lg uppercase">{post.artist.name}</h2>
+              <p class="text-md opacity-90">{post.venue.name}</p>
+              <p class="text-md opacity-75">{formatPostDate(post.date)}</p>
+            </div>
+          </div>
+        </article>
+      </a>
+    ))
+  }
+</div>

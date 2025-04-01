@@ -6,6 +6,7 @@ import { formatPostDate } from '@/lib/date';
 import type { PostsResponse, SearchVariables, Post } from '@/types/graphql';
 import { checkThumbnails } from '@/lib/ownThumbnail';
 import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
+import PostGrid from './PostGrid.astro';
 
 const variables: SearchVariables = {
   start: 0,
@@ -13,7 +14,6 @@ const variables: SearchVariables = {
 };
 
 const { posts } = await graphqlClient.request<PostsResponse>(POSTS, variables);
-const processedPosts: Post[] = posts.data.map(checkThumbnails).slice(0, 6);
 
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
@@ -25,35 +25,7 @@ const translatePath = useTranslatedPath(lang);
       <h2 class="text-3xl font-bold mb-12 border-b-2 border-white inline-block">
         Recent Work
       </h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          processedPosts.map((post) => (
-            <a
-              href={`${translatePath('/album')}/${post.slug}`}
-              class="group relative overflow-hidden"
-            >
-              <Image
-                src={`https://images.wannabes.be/S=W1500,H1500,PD1/${post.thumbnail.hires}`}
-                alt={post.artist.name}
-                class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105 md:transform-none md:group-hover:scale-105"
-                width="1500"
-                height="1000"
-                loading="lazy"
-              />
-              <div class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <div class="text-center">
-                  <p class="text-white text-xl font-semibold">
-                    {post.artist.name}
-                  </p>
-                  <p class="text-white/80 text-sm mt-1">
-                    {formatPostDate(post.date) + ', ' + post.venue.name}
-                  </p>
-                </div>
-              </div>
-            </a>
-          ))
-        }
-      </div>
+      <PostGrid posts={posts.data} />
     </div>
   </div>
 </section>
