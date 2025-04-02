@@ -6,12 +6,20 @@ const lang = getLangFromUrl(Astro.url);
 const route = Astro.url.pathname.replace(`/${lang}`, '');
 ---
 
-<ul>
+<div class="flex items-center space-x-2">
   {
-    Object.entries(languages).map(([lang, label]) => (
-      <li>
-        <a href={`/${lang}/${route || ''}`}>{label}</a>
-      </li>
+    Object.entries(languages).map(([code, label]) => (
+      <a
+        href={`/${code}/${route || ''}`}
+        class:list={[
+          'px-3 py-1 rounded-lg transition-colors uppercase text-sm',
+          code === lang
+            ? 'bg-black text-white font-bold'
+            : 'bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium',
+        ]}
+      >
+        {code}
+      </a>
     ))
   }
-</ul>
+</div>

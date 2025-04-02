@@ -1,14 +1,15 @@
 ---
 import Image from 'astro/components/Image.astro';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import LanguagePicker from './LanguagePicker.astro';
+import Navigation from './Navigation.astro';
+
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<header class="absolute top-0 left-0 right-0 z-20">
+<header class="absolute top-0 left-0 right-0 z-20 px-4 md:px-0">
   <div class="container mx-auto">
-    <div class="flex justify-center md:justify-start items-center h-[150px]">
+    <div class="flex justify-between items-center h-[150px]">
       <a href={`/${lang}`}>
         <div class="flex items-center">
           <Image
@@ -24,6 +25,7 @@ const t = useTranslations(lang);
           </p>
         </div>
       </a>
+      <Navigation theme="dark" />
     </div>
   </div>
 </header>

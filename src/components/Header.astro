@@ -2,13 +2,14 @@
 // Astro components don't need explicit imports for their own components
 import { Image } from 'astro:assets';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import Navigation from './Navigation.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
 <header
-  class="container mx-auto flex justify-center md:justify-start items-center h-[150px]"
+  class="container mx-auto flex justify-between items-center h-[150px] px-4 md:px-0"
 >
   <a href={`/${lang}`}>
     <div class="flex items-center">
@@ -22,4 +23,5 @@ const t = useTranslations(lang);
       <p class="ml-2 text-xs sm:text-sm">{t('nav.photographer.tagline')}</p>
     </div>
   </a>
+  <Navigation />
 </header>
