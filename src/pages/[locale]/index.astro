@@ -10,6 +10,7 @@ import ImageLightbox from '@/components/ImageLightbox.astro';
 import PortfolioHeader from '@/components/PortfolioHeader.astro';
 import RecentWork from '@/components/RecentWork.astro';
 import { Image } from 'astro:assets';
+import BlurHashImage from '@/components/BlurHashImage.astro';
 
 export async function getStaticPaths() {
   return [{ params: { locale: 'en' } }, { params: { locale: 'nl' } }];
@@ -75,8 +76,17 @@ export const prerender = true;
       {/* Split Section */}
       <section
         id="about"
-        class="min-h-[100svh] py-16 flex items-center justify-center"
+        class="min-h-[100svh] flex items-center justify-center relative"
       >
+        <div class="absolute bottom-0 right-0 -z-1 hidden md:block">
+          <Image
+            src="/corner-element-light.jpg"
+            alt=""
+            width={350}
+            height={350}
+            role="presentation"
+          />
+        </div>
         <div class="container mx-auto">
           <div class="flex flex-col-reverse md:flex-row gap-8">
             <div class="w-full md:w-1/2">
@@ -105,59 +115,134 @@ export const prerender = true;
       </section>
       {/* Services Section */}
       <section class="bg-gray-100 py-32">
-        <div class="container mx-auto px-4 text-center">
+        <div class="container mx-auto text-center px-4 md:px-0">
           <h2
             class="text-3xl font-bold mb-12 border-b-2 border-black inline-block"
           >
             {t('services.title')}
           </h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="text-center p-6">
-              <h3 class="text-xl font-semibold mb-4">
-                {t('services.festival.title')}
-              </h3>
-              <p class="text-gray-600">
-                {t('services.festival.description')}
-              </p>
+            <div class="text-center">
+              <div class="mb-4 aspect-[3/2] bg-gray-200 w-full">
+                <BlurHashImage
+                  src="https://images.wannabes.be/S=W750,H750,PD1/hires-2023-08-25-bazart-pukkelpop-pukkelpop-2023-3TYMWAhLZjwcWMzG3.jpg"
+                  alt="Bazart at Pukkelpop 2023"
+                  blurhash="LPCQMi^+s,%2.T-o%2t7tSxuxaof"
+                  width={750}
+                  height={500}
+                />
+              </div>
+              <div class="px-6 pb-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  {t('services.festival.title')}
+                </h3>
+                <p class="text-gray-600">
+                  {t('services.festival.description')}
+                </p>
+              </div>
             </div>
-            <div class="text-center p-6">
-              <h3 class="text-xl font-semibold mb-4">
-                {t('services.concert.title')}
-              </h3>
-              <p class="text-gray-600">
-                {t('services.concert.description')}
-              </p>
+            <div class="text-center">
+              <div class="mb-4 aspect-[3/2] bg-gray-200 w-full">
+                <BlurHashImage
+                  src="https://images.wannabes.be/S=750,750,PD1/hires-2024-08-23-loverman-pukkelpop-pukkelpop-2024-MnSPuDodE96b6hJn2.jpg"
+                  alt="Loverman at Pukkelpop 2024"
+                  blurhash="LUL2w[%L0MxA~8s.Ip$$ROsRt8Si"
+                  width={750}
+                  height={500}
+                />
+              </div>
+              <div class="px-6 pb-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  {t('services.concert.title')}
+                </h3>
+                <p class="text-gray-600">
+                  {t('services.concert.description')}
+                </p>
+              </div>
             </div>
-            <div class="text-center p-6">
-              <h3 class="text-xl font-semibold mb-4">
-                {t('services.social.title')}
-              </h3>
-              <p class="text-gray-600">
-                {t('services.social.description')}
-              </p>
+            <div class="text-center">
+              <div class="mb-4 aspect-[3/2] bg-gray-200 w-full overflow-hidden">
+                <BlurHashImage
+                  src="/cactus-grid-liggend-klein.jpg"
+                  alt="Cactusfestival social media grid"
+                  blurhash="L5C=b{0OcI^8rn,-ASStVJ];ENtm"
+                  width={750}
+                  height={500}
+                />
+              </div>
+              <div class="px-6 pb-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  {t('services.social.title')}
+                </h3>
+                <p class="text-gray-600">
+                  {t('services.social.description')}
+                </p>
+              </div>
             </div>
-            <div class="text-center p-6">
-              <h3 class="text-xl font-semibold mb-4">
-                {t('services.workshops.title')}
-              </h3>
-              <p class="text-gray-600">
-                {t('services.workshops.description')}
-              </p>
+            <div class="text-center">
+              <div class="mb-4 aspect-[3/2] bg-gray-200 w-full overflow-hidden">
+                <BlurHashImage
+                  src="/workshop.jpg"
+                  alt="Workshop"
+                  blurhash="LJOMgEt6u5V[?^ofVse.%OjFWTof"
+                  width={750}
+                  height={500}
+                  class="-translate-y-15"
+                />
+              </div>
+              <div class="px-6 pb-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  {t('services.workshops.title')}
+                </h3>
+                <p class="text-gray-600">
+                  {t('services.workshops.description')}
+                </p>
+              </div>
             </div>
-            <div class="text-center p-6">
-              <h3 class="text-xl font-semibold mb-4">
-                {t('services.licensing.title')}
-              </h3>
-              <p class="text-gray-600">
-                {t('services.licensing.description')}
-              </p>
+            <div class="text-center">
+              <div class="mb-4 aspect-[3/2] bg-gray-200 w-full">
+                <BlurHashImage
+                  src="https://images.wannabes.be/S=W750,H750,PD1/hires-2024-03-14-loverman-vooruit-M4z7NrkpT52j9JtBn.jpg"
+                  alt="Week van de Belgische Muziek"
+                  blurhash="L9BM_P~q000000ay?b-;004n-;-;"
+                  width={750}
+                  height={500}
+                />
+              </div>
+              <div class="px-6 pb-6">
+                <h3 class="text-xl font-semibold mb-4">
+                  {t('services.licensing.title')}
+                </h3>
+                <p class="text-gray-600">
+                  {t('services.licensing.description')}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
       {/* Portfolio Grid */}
-      <section class="w-full bg-black text-white">
-        <div class="py-16">
+      <section class="w-full bg-black text-white relative">
+        <div class="absolute bottom-0 right-0 z-0">
+          <Image
+            src="/corner-element.jpg"
+            alt=""
+            width={350}
+            height={350}
+            role="presentation"
+          />
+        </div>
+        <div class="absolute bottom-0 left-0 z-0 hidden md:block">
+          <Image
+            src="/corner-element.jpg"
+            alt=""
+            width={350}
+            height={350}
+            style="transform: scaleX(-1);"
+            role="presentation"
+          />
+        </div>
+        <div class="py-16 relative z-10">
           <div class="container mx-auto px-4 text-center">
             <h2
               class="text-3xl font-bold mb-12 border-b-2 border-white inline-block"
@@ -170,12 +255,12 @@ export const prerender = true;
                 class="group relative overflow-hidden"
               >
                 <Image
-                  src={`https://images.wannabes.be/S=W1500,H1500,PD1/hires-2022-09-01-tom-misch-pukkelpop-pukkelpop-2022-m3wSqYZ4GQkdBPjbb.jpg`}
+                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2022-09-01-tom-misch-pukkelpop-pukkelpop-2022-m3wSqYZ4GQkdBPjbb.jpg`}
                   alt={`Pukkelpop`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
@@ -188,12 +273,12 @@ export const prerender = true;
                 class="group relative overflow-hidden"
               >
                 <Image
-                  src={`https://images.wannabes.be/S=W1500,H1500,PD1/hires-2024-07-15-the-bony-king-of-nowhere-bijloke-gent-jazz-2024-KXsCzG2auBYwMdKr3.jpg`}
+                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-15-the-bony-king-of-nowhere-bijloke-gent-jazz-2024-KXsCzG2auBYwMdKr3.jpg`}
                   alt={`Gent Jazz`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
@@ -206,12 +291,12 @@ export const prerender = true;
                 class="group relative overflow-hidden"
               >
                 <Image
-                  src={`https://images.wannabes.be/S=W1500,H1500,PD1/hires-2024-09-08-equal-idiots-crammerock-crammerock-2024-ddKKYcpEnAwzu9mws.jpg`}
+                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-09-08-equal-idiots-crammerock-crammerock-2024-ddKKYcpEnAwzu9mws.jpg`}
                   alt={`Crammerock`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
@@ -228,8 +313,8 @@ export const prerender = true;
                   alt={`Lokerse Feesten`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
@@ -244,12 +329,12 @@ export const prerender = true;
                 class="group relative overflow-hidden"
               >
                 <Image
-                  src={`https://images.wannabes.be/S=W1500,H1500,PD1/hires-2024-07-20-klakmatrak-kouter-boomtown-2024-2erJnb73JKSBtsdhy.jpg`}
+                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-20-klakmatrak-kouter-boomtown-2024-2erJnb73JKSBtsdhy.jpg`}
                   alt={`Boomtown`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
@@ -262,12 +347,12 @@ export const prerender = true;
                 class="group relative overflow-hidden"
               >
                 <Image
-                  src={`https://images.wannabes.be/S=W1500,H1500,PD1/hires-2023-07-10-shame-minnewaterpark-cactus-festival-2023-7NHWu3ePc4z2NJpfL.jpg`}
+                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2023-07-10-shame-minnewaterpark-cactus-festival-2023-7NHWu3ePc4z2NJpfL.jpg`}
                   alt={`Cactusfestival`}
                   class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
-                  width="1500"
-                  height="1000"
+                  width="750"
+                  height="500"
                 />
                 <div
                   class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
