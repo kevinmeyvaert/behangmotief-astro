@@ -1,9 +1,7 @@
-import { GraphQLClient } from 'graphql-request';
+import request, { GraphQLClient } from 'graphql-request';
 
-const endpoint = 'https://graphql.wannabes.be/graphql';
+const WANNABES_API_ENDPOINT = 'https://graphql.wannabes.be/graphql';
 
-export const graphqlClient = new GraphQLClient(endpoint, {
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export function fetcher<T>(query: string, params?: object): Promise<T> {
+  return request(WANNABES_API_ENDPOINT, query, params);
+}

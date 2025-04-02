@@ -6,12 +6,13 @@ import {
   useTranslations,
 } from '../../i18n/utils';
 import { routes } from '../../i18n/ui';
-import { POSTS } from '../../lib/queries';
-import { graphqlClient } from '../../lib/graphql-client';
+import { fetcher } from '../../lib/graphql-client';
 import PostGrid from '../../components/PostGrid.astro';
 import Pagination from '../../components/Pagination.astro';
 import Header from '@/components/Header.astro';
 import SearchField from '@/components/SearchField.astro';
+import { POSTS } from '@/lib/queries';
+import type { SearchQuery } from '@/types/wannabes.types';
 
 export async function getStaticPaths() {
   return Object.entries(routes).map(([locale, r]) => ({
@@ -29,7 +30,7 @@ const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
 const POSTS_PER_PAGE = 15;
 
 // Fetch posts with pagination
-const { posts } = await graphqlClient.request(POSTS, {
+const { posts } = await fetcher<SearchQuery>(POSTS, {
   start: (currentPage - 1) * POSTS_PER_PAGE,
   limit: POSTS_PER_PAGE,
   all: searchParam || undefined,
@@ -40,7 +41,7 @@ const totalPages = Math.ceil(posts.pagination.total / POSTS_PER_PAGE);
 
 <Layout title={t('archive.title')} description={t('archive.description')}>
   <Header />
-  <main class="container mx-auto px-4 py-8">
+  <main class="container mx-auto px-4 md:px-0 py-8">
     <SearchField
       currentSearch={searchParam}
       archiveRoute={translatePath('/archive')}

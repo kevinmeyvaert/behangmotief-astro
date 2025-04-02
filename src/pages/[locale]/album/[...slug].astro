@@ -1,7 +1,7 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
-import { graphqlClient } from '@/lib/graphql-client';
+import { fetcher } from '@/lib/graphql-client';
 import { ALBUM, RELATED_ALBUMS } from '@/lib/queries';
 import { routes } from '@/i18n/ui';
 import AlbumLightbox from '@/components/AlbumLightbox.astro';
@@ -9,6 +9,7 @@ import BlurHashImage from '@/components/BlurHashImage.astro';
 import Header from '@/components/Header.astro';
 import { formatPostDate } from '@/lib/date';
 import RelatedContent from '@/components/RelatedContent.astro';
+import type { AlbumQuery, RelatedPostsQuery } from '@/types/wannabes.types';
 
 interface AlbumImage {
   hires: string;
@@ -24,12 +25,15 @@ const t = useTranslations(lang);
 const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
 
 // Fetch the album data
-const { post } = await graphqlClient.request(ALBUM, { slug: slugPath });
+const { post } = await fetcher<AlbumQuery>(ALBUM, { slug: slugPath });
 
-const { sameArtist, sameVenue } = await graphqlClient.request(RELATED_ALBUMS, {
-  artistSlug: post.artist.slug,
-  venueSlug: post.venue.slug,
-});
+const { sameArtist, sameVenue } = await fetcher<RelatedPostsQuery>(
+  RELATED_ALBUMS,
+  {
+    artistSlug: post.artist.slug,
+    venueSlug: post.venue.slug,
+  }
+);
 const hasMoreFromArtist = sameArtist.data?.length - 1 > 0;
 const hasMoreAtVenue = sameVenue.data?.length - 1 > 0;
 

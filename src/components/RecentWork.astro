@@ -1,26 +1,24 @@
 ---
-import { graphqlClient } from '@/lib/graphql-client';
+import { fetcher } from '@/lib/graphql-client';
 import { POSTS } from '@/lib/queries';
-import type { PostsResponse, SearchVariables, Post } from '@/types/graphql';
-import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import PostGrid from './PostGrid.astro';
+import type { SearchQuery } from '@/types/wannabes.types';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
 
-const variables: SearchVariables = {
+const { posts } = await fetcher<SearchQuery>(POSTS, {
   start: 0,
   limit: 6,
-};
-
-const { posts } = await graphqlClient.request<PostsResponse>(POSTS, variables);
+});
 
 const lang = getLangFromUrl(Astro.url);
-const translatePath = useTranslatedPath(lang);
+const t = useTranslations(lang);
 ---
 
 <section class="w-full bg-black text-white">
   <div class="py-16">
     <div class="container mx-auto px-4 text-center">
       <h2 class="text-3xl font-bold mb-12 border-b-2 border-white inline-block">
-        Recent Work
+        {t('recent.work')}
       </h2>
       <PostGrid posts={posts.data} loading="lazy" />
     </div>
