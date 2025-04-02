@@ -6,15 +6,18 @@ import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel/serverless';
 
+import sitemap from '@astrojs/sitemap';
+
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://behangmotief-astro.vercel.app',
   output: 'server',
   adapter: vercel({
     webAnalytics: {
       enabled: true,
     },
   }),
-  integrations: [react()],
+  integrations: [react(), sitemap()],
 
   vite: {
     plugins: [tailwindcss()]
