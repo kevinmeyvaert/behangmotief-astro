@@ -1,0 +1,60 @@
+---
+import { RELATED_ALBUMS } from '@/lib/queries';
+import RelatedContent from './RelatedContent.astro';
+import type {
+  AlbumQuery,
+  Post,
+  RelatedPostsQuery,
+} from '@/types/wannabes.types';
+import { fetcher } from '@/lib/graphql-client';
+import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+
+interface Props {
+  post: AlbumQuery['post'];
+}
+
+const { post } = Astro.props;
+
+const { sameArtist, sameVenue } = await fetcher<RelatedPostsQuery>(
+  RELATED_ALBUMS,
+  {
+    artistSlug: post.artist.slug,
+    venueSlug: post.venue.slug,
+  }
+);
+const hasMoreFromArtist = sameArtist.data?.length - 1 > 0;
+const hasMoreAtVenue = sameVenue.data?.length - 1 > 0;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<section class="bg-gray-100">
+  <div class="container mx-auto py-12 px-4 md:px-0">
+    {
+      hasMoreFromArtist && (
+        <RelatedContent
+          relatedPosts={sameArtist.data}
+          title={t('album.more_from_artist').replace(
+            '{artist}',
+            post.artist.name
+          )}
+          postId={post.id}
+          type="artist"
+          className="mb-12"
+        />
+      )
+    }
+    {
+      hasMoreAtVenue && (
+        <RelatedContent
+          relatedPosts={sameVenue.data}
+          title={t('album.more_at_venue').replace('{venue}', post.venue.name)}
+          postId={post.id}
+          type="venue"
+          className="mb-12"
+        />
+      )
+    }
+  </div>
+</section>
