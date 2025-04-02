@@ -1,4 +1,4 @@
-import request, { GraphQLClient } from 'graphql-request';
+import request from 'graphql-request';
 
 const WANNABES_API_ENDPOINT = 'https://graphql.wannabes.be/graphql';
 
