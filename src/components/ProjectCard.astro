@@ -1,0 +1,33 @@
+---
+import FlutedGlassImage from './FlutedGlassImage.astro';
+
+interface Props {
+  title: string;
+  imageUrl: string;
+  searchTerm: string;
+  translatePath: (path: string) => string;
+  blurhash: string;
+}
+
+const { title, imageUrl, searchTerm, translatePath, blurhash } = Astro.props;
+---
+
+<a
+  href={`${translatePath('/archive')}?search=${encodeURIComponent(searchTerm)}`}
+>
+  <FlutedGlassImage
+    src={imageUrl}
+    alt={title}
+    class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105"
+    loading="lazy"
+    width="750"
+    height="500"
+    blurhash={blurhash}
+  >
+    <div class="absolute inset-0 flex items-center justify-center">
+      <p class="text-white text-xl font-semibold uppercase">
+        {title}
+      </p>
+    </div>
+  </FlutedGlassImage>
+</a>

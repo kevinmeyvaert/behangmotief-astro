@@ -11,6 +11,8 @@ import PortfolioHeader from '@/components/PortfolioHeader.astro';
 import RecentWork from '@/components/RecentWork.astro';
 import { Image } from 'astro:assets';
 import BlurHashImage from '@/components/BlurHashImage.astro';
+import FlutedGlassImage from '@/components/FlutedGlassImage.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
 
 export async function getStaticPaths() {
   return [{ params: { locale: 'en' } }, { params: { locale: 'nl' } }];
@@ -40,6 +42,51 @@ const heroImages = [
     src: 'https://images.wannabes.be/S=W1500,H1500,PD1/hires-2023-07-14-nils-frahm-bijloke-gent-jazz-2023-gB27ZRBmSDoyfiK59.jpg',
     blurhash: 'LFG6:]0~0O~9}SAGI[NGIWSO$%Ip',
     alt: 'Nils Frahm at Gent Jazz 2023',
+  },
+];
+
+const projects = [
+  {
+    title: 'Pukkelpop',
+    imageUrl:
+      'https://images.wannabes.be/S=W750,H750,PD1/hires-2022-09-01-tom-misch-pukkelpop-pukkelpop-2022-m3wSqYZ4GQkdBPjbb.jpg',
+    searchTerm: 'Pukkelpop',
+    blurhash: 'LaMh*{+?I:x]VX~CIoM{E-57r[R-',
+  },
+  {
+    title: 'Gent Jazz',
+    imageUrl:
+      'https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-15-the-bony-king-of-nowhere-bijloke-gent-jazz-2024-KXsCzG2auBYwMdKr3.jpg',
+    searchTerm: 'Gent Jazz',
+    blurhash: 'LFG6:]0~0O~9}SAGI[NGIWSO$%Ip',
+  },
+  {
+    title: 'Crammerock',
+    imageUrl:
+      'https://images.wannabes.be/S=W750,H750,PD1/hires-2024-09-08-equal-idiots-crammerock-crammerock-2024-ddKKYcpEnAwzu9mws.jpg',
+    searchTerm: 'Crammerock',
+    blurhash: 'LQ5GD5MuZ}e-yGRMaJadRMo#W@ad',
+  },
+  {
+    title: 'Lokerse Feesten',
+    imageUrl:
+      'https://images.wannabes.be/S=W1024,H1024,PD1/hires-2022-08-06-froukje-lokerse-feesten-lokerse-feesten-2022-jcQohA95rNKsD6qbh.jpg',
+    searchTerm: 'Lokerse Feesten',
+    blurhash: 'LQ5GD5MuZ}e-yGRMaJadRMo#W@ad',
+  },
+  {
+    title: 'Boomtown',
+    imageUrl:
+      'https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-20-klakmatrak-kouter-boomtown-2024-2erJnb73JKSBtsdhy.jpg',
+    searchTerm: 'Boomtown',
+    blurhash: 'LQ5GD5MuZ}e-yGRMaJadRMo#W@ad',
+  },
+  {
+    title: 'Cactusfestival',
+    imageUrl:
+      'https://images.wannabes.be/S=W750,H750,PD1/hires-2023-07-10-shame-minnewaterpark-cactus-festival-2023-7NHWu3ePc4z2NJpfL.jpg',
+    searchTerm: 'Cactusfestival',
+    blurhash: 'LQ5GD5MuZ}e-yGRMaJadRMo#W@ad',
   },
 ];
 
@@ -250,116 +297,17 @@ export const prerender = true;
               {t('portfolio.title')}
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <a
-                href={`${translatePath('/archive')}?search=Pukkelpop`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2022-09-01-tom-misch-pukkelpop-pukkelpop-2022-m3wSqYZ4GQkdBPjbb.jpg`}
-                  alt={`Pukkelpop`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">Pukkelpop</p>
-                </div>
-              </a>
-              <a
-                href={`${translatePath('/archive')}?search=Gent%20Jazz`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-15-the-bony-king-of-nowhere-bijloke-gent-jazz-2024-KXsCzG2auBYwMdKr3.jpg`}
-                  alt={`Gent Jazz`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">Gent Jazz</p>
-                </div>
-              </a>
-              <a
-                href={`${translatePath('/archive')}?search=Crammerock`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-09-08-equal-idiots-crammerock-crammerock-2024-ddKKYcpEnAwzu9mws.jpg`}
-                  alt={`Crammerock`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">Crammerock</p>
-                </div>
-              </a>
-              <a
-                href={`${translatePath('/archive')}?search=Lokerse%20Feesten`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W1024,H1024,PD1/hires-2022-08-06-froukje-lokerse-feesten-lokerse-feesten-2022-jcQohA95rNKsD6qbh.jpg`}
-                  alt={`Lokerse Feesten`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">
-                    Lokerse Feesten
-                  </p>
-                </div>
-              </a>
-              <a
-                href={`${translatePath('/archive')}?search=Boomtown`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2024-07-20-klakmatrak-kouter-boomtown-2024-2erJnb73JKSBtsdhy.jpg`}
-                  alt={`Boomtown`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">Boomtown</p>
-                </div>
-              </a>
-              <a
-                href={`${translatePath('/archive')}?search=Cactusfestival`}
-                class="group relative overflow-hidden"
-              >
-                <Image
-                  src={`https://images.wannabes.be/S=W750,H750,PD1/hires-2023-07-10-shame-minnewaterpark-cactus-festival-2023-7NHWu3ePc4z2NJpfL.jpg`}
-                  alt={`Cactusfestival`}
-                  class="w-full h-[400px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  loading="lazy"
-                  width="750"
-                  height="500"
-                />
-                <div
-                  class="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                >
-                  <p class="text-white text-xl font-semibold">Cactusfestival</p>
-                </div>
-              </a>
+              {
+                projects.map((project) => (
+                  <ProjectCard
+                    title={project.title}
+                    imageUrl={project.imageUrl}
+                    searchTerm={project.searchTerm}
+                    translatePath={translatePath}
+                    blurhash={project.blurhash}
+                  />
+                ))
+              }
             </div>
           </div>
         </div>
