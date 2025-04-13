@@ -13,6 +13,7 @@ export default defineConfig({
   site: 'https://behangmotief-astro.vercel.app',
   output: 'server',
   adapter: vercel({
+    isr: true,
     webAnalytics: {
       enabled: true,
     },
