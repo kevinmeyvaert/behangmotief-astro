@@ -37,6 +37,8 @@ const { posts } = await fetcher<SearchQuery>(POSTS, {
 });
 
 const totalPages = Math.ceil(posts.pagination.total / POSTS_PER_PAGE);
+
+export const prerender = false;
 ---
 
 <Layout title={t('archive.title')} description={t('archive.description')}>
