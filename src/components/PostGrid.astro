@@ -2,6 +2,7 @@
 import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import BlurHashImage from './BlurHashImage.astro';
 import { formatPostDate } from '@/lib/date';
+import { checkThumbnails } from '@/lib/ownThumbnail';
 
 interface Props {
   loading: 'lazy' | 'eager';
@@ -26,35 +27,63 @@ const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<style>
+  .masonry {
+    column-count: 1;
+    column-gap: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .masonry {
+      column-count: 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .masonry {
+      column-count: 3;
+    }
+  }
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+</style>
+
+<div class="masonry">
   {
-    posts.map((post) => (
-      <a href={`${translatePath('/album')}/${post.slug}`} class="group">
-        <article
-          class="relative overflow-hidden"
-          style={{
-            boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
-          }}
+    posts.map(checkThumbnails).map((post) => {
+      return (
+        <a
+          href={`${translatePath('/album')}/${post.slug}`}
+          class="group masonry-item"
         >
-          <BlurHashImage
-            blurhash={post.thumbnail.blurhash}
-            src={`https://images.wannabes.be/S=W750,H750,PD1/${post.thumbnail.hires}`}
-            alt={`${post.artist.name} at ${post.venue.name}`}
-            width={post.thumbnail.dimensions.width}
-            height={post.thumbnail.dimensions.height}
-            loading={loading}
-            class="aspect-[4/3] object-cover w-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-100">
-            <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-row items-center justify-between">
-              <h2 class="font-bold text-lg uppercase">{post.artist.name}</h2>
-              <p class="text-sm opacity-75">
-                {post.venue.name} — {formatPostDate(post.date)}
-              </p>
+          <article
+            class="relative overflow-hidden"
+            style={{
+              boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
+              aspectRatio: `${post.thumbnail.dimensions.width} / ${post.thumbnail.dimensions.height}`,
+            }}
+          >
+            <BlurHashImage
+              blurhash={post.thumbnail.blurhash}
+              src={`https://images.wannabes.be/S=W750,H750,PD1/${post.thumbnail.hires}`}
+              alt={`${post.artist.name} at ${post.venue.name}`}
+              width={post.thumbnail.dimensions.width}
+              height={post.thumbnail.dimensions.height}
+              loading={loading}
+              class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-100">
+              <div class="absolute bottom-0 left-0 right-0 p-4 text-white flex flex-row items-center justify-between">
+                <h2 class="font-bold text-lg uppercase">{post.artist.name}</h2>
+                <p class="text-sm opacity-75">
+                  {post.venue.name} — {formatPostDate(post.date)}
+                </p>
+              </div>
             </div>
-          </div>
-        </article>
-      </a>
-    ))
+          </article>
+        </a>
+      );
+    })
   }
 </div>
