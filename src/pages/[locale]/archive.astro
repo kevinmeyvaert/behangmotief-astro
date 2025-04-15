@@ -18,12 +18,10 @@ import { routes } from '@/i18n/ui';
 export const prerender = true;
 
 // Add static paths for locales
-export function getStaticPaths() {
-  return Object.entries(routes).flatMap(([locale, r]) => {
-    return {
-      params: { locale, archive: r.archive },
-    };
-  });
+export async function getStaticPaths() {
+  return Object.entries(routes).map(([locale, r]) => ({
+    params: { locale, archive: r.archive },
+  }));
 }
 
 const lang = getLangFromUrl(Astro.url);
