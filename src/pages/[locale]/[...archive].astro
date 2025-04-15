@@ -14,10 +14,15 @@ import SearchField from '@/components/SearchField.astro';
 import { POSTS } from '@/lib/queries';
 import type { SearchQuery } from '@/types/wannabes.types';
 
+// Force dynamic rendering
+export const prerender = false;
+
 export async function getStaticPaths() {
-  return Object.entries(routes).map(([locale, r]) => ({
-    params: { locale, archive: r.archive },
-  }));
+  return Object.entries(routes).flatMap(([locale, r]) => {
+    return {
+      params: { locale, archive: r.archive.split('/') },
+    };
+  });
 }
 
 const lang = getLangFromUrl(Astro.url);
@@ -37,8 +42,6 @@ const { posts } = await fetcher<SearchQuery>(POSTS, {
 });
 
 const totalPages = Math.ceil(posts.pagination.total / POSTS_PER_PAGE);
-
-export const prerender = false;
 ---
 
 <Layout title={t('archive.title')} description={t('archive.description')}>
