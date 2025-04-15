@@ -12,13 +12,18 @@ import Header from '@/components/Header.astro';
 import SearchField from '@/components/SearchField.astro';
 import { POSTS } from '@/lib/queries';
 import type { SearchQuery } from '@/types/wannabes.types';
+import { routes } from '@/i18n/ui';
 
 // Use ISR with a reasonable revalidation time
 export const prerender = true;
 
 // Add static paths for locales
 export function getStaticPaths() {
-  return [{ params: { locale: 'nl' } }, { params: { locale: 'en' } }];
+  return Object.entries(routes).flatMap(([locale, r]) => {
+    return {
+      params: { locale, archive: r.archive },
+    };
+  });
 }
 
 const lang = getLangFromUrl(Astro.url);
