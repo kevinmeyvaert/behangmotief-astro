@@ -14,18 +14,15 @@ import { POSTS } from '@/lib/queries';
 import type { SearchQuery } from '@/types/wannabes.types';
 import { routes } from '@/i18n/ui';
 
-// Use ISR with a reasonable revalidation time
-export const prerender = true;
-
-// Add static paths for locales
-export async function getStaticPaths() {
-  return Object.entries(routes).map(([locale, r]) => ({
-    params: {
-      locale,
-      archive: r.archive,
-    },
-  }));
-}
+// Remove prerender flag to allow dynamic searching
+// export async function getStaticPaths() {
+//   return Object.entries(routes).map(([locale, r]) => ({
+//     params: {
+//       locale,
+//       archive: r.archive,
+//     },
+//   }));
+// }
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);

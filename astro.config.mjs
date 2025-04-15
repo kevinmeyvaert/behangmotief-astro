@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 
 import tailwindcss from '@tailwindcss/vite';
-import vercel from '@astrojs/vercel/serverless';
+import vercel from '@astrojs/vercel';
 
 import sitemap from '@astrojs/sitemap';
 
@@ -13,7 +13,9 @@ export default defineConfig({
   site: 'https://behangmotief-astro.vercel.app',
   output: 'server',
   adapter: vercel({
-    isr: true,
+    isr: {
+      exclude: ['/nl/archief', '/en/archive'],
+    },
     webAnalytics: {
       enabled: true,
     },
