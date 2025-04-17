@@ -9,7 +9,7 @@ import BlurHashImage from '@/components/BlurHashImage.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import Header from '@/components/Header.astro';
 import { formatPostDate } from '@/lib/date';
-import type { AlbumQuery, GetAlbumPathsQuery } from '@/types/wannabes.types';
+import type { AlbumQuery } from '@/types/wannabes.types';
 
 interface AlbumImage {
   hires: string;
@@ -38,17 +38,6 @@ const descriptions = (venue?: string, artist?: string) => {
 };
 
 const description = descriptions(post.venue.name, post.artist.name);
-
-export async function getStaticPaths() {
-  const { posts } = await fetcher<GetAlbumPathsQuery>(ALBUM_PATHS);
-  return posts.data.flatMap((post) =>
-    Object.entries(routes).map(([locale, r]) => ({
-      params: { locale, album: r.album, slug: post.slug },
-    }))
-  );
-}
-
-export const prerender = true;
 ---
 
 <Layout

@@ -12,17 +12,6 @@ import Header from '@/components/Header.astro';
 import SearchField from '@/components/SearchField.astro';
 import { POSTS } from '@/lib/queries';
 import type { SearchQuery } from '@/types/wannabes.types';
-import { routes } from '@/i18n/ui';
-
-// Remove prerender flag to allow dynamic searching
-// export async function getStaticPaths() {
-//   return Object.entries(routes).map(([locale, r]) => ({
-//     params: {
-//       locale,
-//       archive: r.archive,
-//     },
-//   }));
-// }
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
