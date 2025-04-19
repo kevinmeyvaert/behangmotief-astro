@@ -96,6 +96,9 @@ export const ui = {
     'search.placeholder': 'Search artist, venue or festival...',
     'search.button.aria': 'Search',
     'recent.work': 'Recent Work',
+    'grid.title': 'Grid | Behangmotief — Music & festival photographer',
+    'grid.description':
+      'Browse my archive of over 6 years of music photography.',
   },
   nl: {
     'archive.title': 'Archief | Behangmotief — Muziek & festival fotograaf',
@@ -174,5 +177,8 @@ export const ui = {
     'search.placeholder': 'Zoek een artiest, locatie of festival...',
     'search.button.aria': 'Zoeken',
     'recent.work': 'Recent Werk',
+    'grid.title': 'Grid | Behangmotief — Muziek & festival fotograaf',
+    'grid.description':
+      'Blader door mijn archief van meer dan 6 jaar muziekfotografie.',
   },
 } as const;
