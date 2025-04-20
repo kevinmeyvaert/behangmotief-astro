@@ -9,10 +9,12 @@ export const routes = {
   nl: {
     archive: 'archief',
     album: 'album',
+    grid: 'het-motief',
   },
   en: {
     archive: 'archive',
     album: 'album',
+    grid: 'grid',
   },
 };
 
@@ -30,6 +32,7 @@ export const ui = {
     'nav.hello': 'Hello',
     'nav.archive': 'Archive',
     'nav.contact': 'Contact',
+    'nav.grid': 'The Grid',
     'nav.photographer.tagline': '| music & festival photographer',
     'hero.title': 'Capturing Moments in Music',
     'hero.subtitle': 'Professional music & festival photography',
@@ -111,6 +114,7 @@ export const ui = {
     'nav.hello': 'Hallo',
     'nav.archive': 'Archief',
     'nav.contact': 'Contact',
+    'nav.grid': 'Het Motief',
     'nav.photographer.tagline': '| muziek & festival fotograaf',
     'hero.title': 'Muzikale momenten vastgelegd',
     'hero.subtitle': 'Professionele muziek- & festivalfotografie',

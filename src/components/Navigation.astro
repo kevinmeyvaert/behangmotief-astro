@@ -20,6 +20,8 @@ const translatePath = useTranslatedPath(lang);
 const isArchiveActive =
   currentPath === translatePath('archive') ||
   currentPath.startsWith(translatePath('album'));
+
+const isGridActive = currentPath === translatePath('grid');
 ---
 
 <nav>
@@ -35,6 +37,12 @@ const isArchiveActive =
       class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isArchiveActive ? 'border-b-2 border-current' : ''}`}
     >
       {t('nav.archive')}
+    </a>
+    <a
+      href={translatePath('grid')}
+      class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isGridActive ? 'border-b-2 border-current' : ''}`}
+    >
+      {t('nav.grid')}
     </a>
     <LanguagePicker />
   </div>
@@ -98,6 +106,12 @@ const isArchiveActive =
             class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isArchiveActive ? 'font-bold' : ''}`}
           >
             {t('nav.archive')}
+          </a>
+          <a
+            href={translatePath('grid')}
+            class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isGridActive ? 'font-bold' : ''}`}
+          >
+            {t('nav.grid')}
           </a>
           <div class={`${theme === 'dark' ? 'text-white' : 'text-black'}`}>
             <LanguagePicker />
