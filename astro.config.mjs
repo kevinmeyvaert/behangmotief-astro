@@ -14,7 +14,7 @@ export default defineConfig({
   output: 'server',
   adapter: vercel({
     isr: {
-      exclude: ['/nl/archief', '/en/archive'],
+      exclude: ['/nl/archief', '/en/archive', '/nl/grid', '/en/grid'],
     },
     webAnalytics: {
       enabled: true,
