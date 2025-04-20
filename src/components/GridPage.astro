@@ -19,7 +19,7 @@ const photoSets = await getPhotoSets();
       photoSets.map((photoSet) =>
         photoSet.photos.map((photo) => (
           <BlurHashImage
-            src={photo.url}
+            src={photo.formats.small.url}
             alt={photoSet.title}
             width={800}
             height={1000}
