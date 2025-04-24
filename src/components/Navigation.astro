@@ -21,7 +21,8 @@ const isArchiveActive =
   currentPath === translatePath('archive') ||
   currentPath.startsWith(translatePath('album'));
 
-const isGridActive = currentPath === translatePath('grid');
+const isGridActive =
+  currentPath === translatePath('grid') || currentPath.startsWith(translatePath('grid'));
 ---
 
 <nav>
