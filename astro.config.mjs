@@ -10,7 +10,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://behangmotief-astro.vercel.app',
+  site: 'https://behangmotief.be',
   output: 'server',
   adapter: vercel({
     isr: {

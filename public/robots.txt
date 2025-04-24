@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://behangmotief-astro.vercel.app/sitemap-index.xml
+Sitemap: https://behangmotief.be/sitemap-index.xml
