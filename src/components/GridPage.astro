@@ -4,6 +4,7 @@ import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import BlurHashImage from './BlurHashImage.astro';
 import Header from './Header.astro';
 import { getPhotoSets } from '@/lib/photo-sets';
+import GridLightbox from './GridLightbox.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -18,17 +19,27 @@ const photoSets = await getPhotoSets();
     {
       photoSets.map((photoSet) =>
         photoSet.photos.map((photo) => (
-          <BlurHashImage
-            src={photo.formats.small.url}
-            alt={photoSet.title}
-            width={800}
-            height={1000}
-            blurhash={photo.blurhash}
-            class="aspect-[4/5] object-cover w-full"
-            loading="lazy"
-          />
+          <div
+            class="cursor-pointer"
+            data-grid-image-trigger
+            data-full-image={photo.formats.large.url}
+            data-blurhash={photo.blurhash}
+            data-width={photo.width}
+            data-height={photo.height}
+          >
+            <BlurHashImage
+              src={photo.formats.small.url}
+              alt={photoSet.title}
+              width={800}
+              height={1000}
+              blurhash={photo.blurhash}
+              class="aspect-[4/5] object-cover w-full"
+              loading="lazy"
+            />
+          </div>
         ))
       )
     }
   </div>
+  <GridLightbox alt={t('grid.title')} />
 </Layout> 

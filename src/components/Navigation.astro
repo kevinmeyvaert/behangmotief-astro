@@ -17,6 +17,8 @@ const { theme = 'light' } = Astro.props;
 const currentPath = new URL(Astro.request.url).pathname;
 const translatePath = useTranslatedPath(lang);
 
+const isHomeActive = currentPath === `/${lang}`;
+
 const isArchiveActive =
   currentPath === translatePath('archive') ||
   currentPath.startsWith(translatePath('album'));
@@ -29,7 +31,7 @@ const isGridActive =
   <div class="hidden md:flex space-x-8 items-center">
     <a
       href={`/${lang}`}
-      class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${currentPath === `/${lang}` ? 'border-b-2 border-current' : ''}`}
+      class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isHomeActive ? 'border-b-2 border-current' : ''}`}
     >
       {t('nav.home')}
     </a>
@@ -98,7 +100,7 @@ const isGridActive =
         <div class="flex flex-col space-y-8 text-2xl -mt-16 text-center">
           <a
             href={`/${lang}`}
-            class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${currentPath === `/${lang}` ? 'font-bold' : ''}`}
+            class={`${theme === 'dark' ? 'text-white' : 'text-black'} hover:opacity-70 transition-opacity ${isHomeActive ? 'font-bold' : ''}`}
           >
             {t('nav.home')}
           </a>
