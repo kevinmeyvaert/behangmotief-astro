@@ -22,6 +22,7 @@ export const defaultLang = 'nl';
 
 export const ui = {
   en: {
+    'about.cta': '✨ vibe check ✨',
     'archive.title': 'Archive | Behangmotief — Music & festival photographer',
     'archive.description':
       'Search photos by artist, venue or festival. Go through my archive of over 6 years of music photography.',
@@ -36,7 +37,7 @@ export const ui = {
     'nav.photographer.tagline': '| music & festival photographer',
     'hero.title': 'Capturing Moments in Music',
     'hero.subtitle': 'Professional music & festival photography',
-    'hero.cta': 'About me 🙋‍♂️',
+    'hero.cta': 'Get to know me 🙋‍♂️',
     'about.title': 'Capturing the Energy of Live Music',
     'about.description1':
       'With years of experience in music photography, I specialize in capturing the raw energy and emotion of live performances. From intimate club shows to massive festival stages, I bring a unique perspective to every shot.',
@@ -104,6 +105,7 @@ export const ui = {
       'Browse my archive of over 6 years of music photography.',
   },
   nl: {
+    'about.cta': '✨ vibe check ✨',
     'archive.title': 'Archief | Behangmotief — Muziek & festival fotograaf',
     'archive.description':
       'Doorzoek mijn archief van meer dan 6 jaar muziekfotografie per artiest, locatie of festival.',
@@ -118,7 +120,7 @@ export const ui = {
     'nav.photographer.tagline': '| muziek & festival fotograaf',
     'hero.title': 'Muzikale momenten vastgelegd',
     'hero.subtitle': 'Professionele muziek- & festivalfotografie',
-    'hero.cta': 'Over mij 🙋‍♂️',
+    'hero.cta': 'Leer mij kennen 🙋‍♂️',
     'about.title': 'De energie van live muziek vastgelegd',
     'about.description1':
       'Met jarenlange ervaring in muziekfotografie, ben ik gespecialiseerd in het vastleggen van de pure energie en emotie van live optredens. Van intieme clubshows tot grote festivalpodia, breng ik een uniek perspectief in elke foto.',
@@ -130,16 +132,16 @@ export const ui = {
       'Naadloze festivalverslaggeving met snelle verwerking—levering van hoogwaardige beelden die de energie en opwinding van elk moment vastleggen.',
     'services.concert.title': 'Concertfotografie',
     'services.concert.description':
-      'Professionele concertfotografie met snelle levering, zodat bands en locaties direct na het optreden over aansprekende beelden beschikken voor promotie en marketing.',
+      'Professionele concertfotografie met snelle levering, zodat bands en venues direct na het optreden over coole beelden beschikken voor promotie en marketing.',
     'services.social.title': 'Samengestelde Social Media Feeds',
     'services.social.description':
-      'Moeiteloos samengestelde social media feeds met verse, boeiende content die snel wordt geleverd om je publiek betrokken te houden.',
+      'Visueel prikkelende social media feeds met verse, boeiende content om je publiek betrokken te houden tijdens en na het evenement.',
     'services.workshops.title': 'Workshops',
     'services.workshops.description':
       'Ik bied workshops en presentaties aan voor andere fotografen om hen te helpen het beste uit hun concertfotografie te halen.',
     'services.licensing.title': 'Foto Licenties',
     'services.licensing.description':
-      'Ik bied fotolicenties aan voor je projecten, of je nu één afbeelding of een collectie nodig hebt.',
+      'Ik bied fotolicenties aan voor je projecten, of je nu één afbeelding of een reeks nodig hebt. Contacteer me voor een offerte op maat.',
     'portfolio.title': 'Uitgelicht werk',
     'collaborate.title': 'Laten we samenwerken',
     'collaborate.description':

@@ -11,7 +11,6 @@ import PortfolioHeader from '@/components/PortfolioHeader.astro';
 import RecentWork from '@/components/RecentWork.astro';
 import { Image } from 'astro:assets';
 import BlurHashImage from '@/components/BlurHashImage.astro';
-import FlutedGlassImage from '@/components/FlutedGlassImage.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
 
 export async function getStaticPaths() {
@@ -152,8 +151,16 @@ export const prerender = true;
                 <p class="text-gray-600 mb-6">
                   {t('about.description1')}
                 </p>
-                <p class="text-gray-600">
+                <p class="text-gray-600 mb-6">
                   {t('about.description2')}
+                </p>
+                <p>
+                  <a
+                    href={translatePath('grid')}
+                    class="inline-block bg-black text-white px-3 py-1.5 text-sm font-semibold hover:bg-gray-800 transition-colors rounded-md"
+                  >
+                    {t('about.cta')}
+                  </a>
                 </p>
               </div>
             </div>
