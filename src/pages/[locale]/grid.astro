@@ -1,6 +1,10 @@
 ---
 import GridPage from '@/components/GridPage.astro';
 export const prerender = true;
+
+export async function getStaticPaths() {
+  return [{ params: { locale: 'en' } }];
+}
 ---
 
 <GridPage /> 
