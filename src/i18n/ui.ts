@@ -103,6 +103,10 @@ export const ui = {
     'grid.title': 'Grid | Behangmotief — Music & festival photographer',
     'grid.description':
       'Browse my archive of over 6 years of music photography.',
+    'grid.introTitle': 'Quick note before you scroll forever...',
+    'grid.introDescription':
+      "This isn't the homepage - just the \"director's cut\" of my concert photography. Yeah, it's a lot of photos, but the goal here is to show range and vibe. If you're looking for something more curated, head to the homepage below.",
+    'grid.introCta': 'Take me home 🏠',
   },
   nl: {
     'about.cta': '✨ vibe check ✨',
@@ -186,5 +190,9 @@ export const ui = {
     'grid.title': 'Grid | Behangmotief — Muziek & festival fotograaf',
     'grid.description':
       'Blader door mijn archief van meer dan 6 jaar muziekfotografie.',
+    'grid.introTitle': 'Voor je eindeloos begint te scrollen...',
+    'grid.introDescription':
+      'Dit is niet de homepage – meer een soort ‘director’s cut’ van m’n concertfotografie. Ja, het zijn veel foto’s, maar het idee hier is om m’n stijl en vibe te laten zien. Op zoek naar een meer beknopte versie (of gewoon minder scrollen)? Check dan de homepage hieronder.',
+    'grid.introCta': 'Naar de homepage 🏠',
   },
 } as const;
