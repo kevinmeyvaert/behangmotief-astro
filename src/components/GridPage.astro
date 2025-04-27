@@ -10,6 +10,7 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const photoSets = await getPhotoSets();
+console.log(photoSets[0].photos[0]);
 ---
 
 <Layout title={t('grid.title')} description={t('grid.description')}>
@@ -39,6 +40,7 @@ const photoSets = await getPhotoSets();
           <div
             class="cursor-pointer"
             data-grid-image-trigger
+            data-image-id={photo.documentId}
             data-full-image={photo.formats.large.url}
             data-blurhash={photo.blurhash}
             data-width={photo.width}
