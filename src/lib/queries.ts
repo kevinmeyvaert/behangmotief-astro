@@ -76,6 +76,7 @@ export const ALBUM = gql`
       images {
         blurhash
         hires
+        id
         dimensions {
           width
           height

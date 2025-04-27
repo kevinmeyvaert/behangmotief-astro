@@ -427,7 +427,7 @@ export type AlbumQueryVariables = Exact<{
 }>;
 
 
-export type AlbumQuery = { __typename?: 'Query', post: { __typename?: 'Post', date: any, id: string, url: string, thumbnail: { __typename?: 'Image', resized: string, photographer: { __typename?: 'Photographer', firstName: string } }, artist: { __typename?: 'Artist', name: string, slug: string }, venue: { __typename?: 'Venue', name: string, slug: string }, event: { __typename?: 'Event', name: string }, images: Array<{ __typename?: 'Image', blurhash: string, hires: string, dimensions: { __typename?: 'Dimensions', width: number, height: number }, photographer: { __typename?: 'Photographer', firstName: string } }> } };
+export type AlbumQuery = { __typename?: 'Query', post: { __typename?: 'Post', date: any, id: string, url: string, thumbnail: { __typename?: 'Image', resized: string, photographer: { __typename?: 'Photographer', firstName: string } }, artist: { __typename?: 'Artist', name: string, slug: string }, venue: { __typename?: 'Venue', name: string, slug: string }, event: { __typename?: 'Event', name: string }, images: Array<{ __typename?: 'Image', blurhash: string, hires: string, id: string, dimensions: { __typename?: 'Dimensions', width: number, height: number }, photographer: { __typename?: 'Photographer', firstName: string } }> } };
 
 export type RelatedPostsQueryVariables = Exact<{
   artistSlug: InputMaybe<Scalars['String']['input']>;

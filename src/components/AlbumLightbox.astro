@@ -131,8 +131,11 @@ const { alt } = Astro.props;
         }
       });
 
-      triggerElements.forEach((trigger, index) => {
-        trigger.addEventListener('click', () => this.openLightbox(index));
+      triggerElements.forEach((trigger) => {
+        trigger.addEventListener('click', () => {
+          const imageId = trigger.getAttribute('data-image-id')!;
+          this.openLightbox(imageId);
+        });
       });
 
       closeButton?.addEventListener('click', () => this.closeLightbox());
@@ -160,6 +163,18 @@ const { alt } = Astro.props;
           }
         }
       });
+
+      // Check for image parameter in URL on page load
+      const urlParams = new URLSearchParams(window.location.search);
+      const imageId = urlParams.get('image');
+      if (imageId) {
+        const trigger = Array.from(triggerElements).find(
+          (el) => el.getAttribute('data-image-id') === imageId
+        );
+        if (trigger) {
+          this.openLightbox(imageId);
+        }
+      }
     }
 
     private getCurrentTrigger(): HTMLElement {
@@ -252,54 +267,56 @@ const { alt } = Astro.props;
       }
     }
 
-    private openLightbox(index: number) {
+    private getTriggerIndexById(imageId: string): number {
+      return this.triggerElements.findIndex(
+        (el) => el.getAttribute('data-image-id') === imageId
+      );
+    }
+
+    private updateUrl(imageId: string) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('image', imageId);
+      window.history.pushState({}, '', url);
+    }
+
+    private openLightbox(imageId: string) {
+      const index = this.getTriggerIndexById(imageId);
+      if (index === -1) return;
+
       this.currentIndex = index;
       this.overlay.classList.remove('hidden');
+      this.spinner.style.display = 'flex';
+      this.img.classList.add('opacity-0');
       document.body.style.overflow = 'hidden';
-      this.updateImage();
+
+      const trigger = this.getCurrentTrigger();
+      const { url, blurhash, width, height } = this.getImageData(trigger);
+      this.img.src = url;
+      this.setBlurhashBackground(blurhash, width, height);
+      this.updateUrl(imageId);
     }
 
     private closeLightbox() {
       this.overlay.classList.add('hidden');
       document.body.style.overflow = '';
-      this.img.classList.add('opacity-0');
-      const blurhashDiv = this.blurhashEl.querySelector('div');
-      if (blurhashDiv) {
-        blurhashDiv.classList.add('opacity-0');
-      }
+      this.img.src = '';
+      const url = new URL(window.location.href);
+      url.searchParams.delete('image');
+      window.history.pushState({}, '', url);
     }
 
     private showPrevImage() {
-      this.currentIndex =
-        (this.currentIndex - 1 + this.triggerElements.length) %
-        this.triggerElements.length;
-      this.updateImage();
+      const newIndex = (this.currentIndex - 1 + this.triggerElements.length) % this.triggerElements.length;
+      const newTrigger = this.triggerElements[newIndex];
+      const newImageId = newTrigger.getAttribute('data-image-id')!;
+      this.openLightbox(newImageId);
     }
 
     private showNextImage() {
-      this.currentIndex = (this.currentIndex + 1) % this.triggerElements.length;
-      this.updateImage();
-    }
-
-    private updateImage() {
-      const trigger = this.getCurrentTrigger();
-      const imageData = this.getImageData(trigger);
-
-      // Show spinner and reset states
-      this.spinner.style.display = 'flex';
-      this.img.classList.add('opacity-0');
-      const blurhashDiv = this.blurhashEl.querySelector('div');
-      if (blurhashDiv) {
-        blurhashDiv.classList.remove('opacity-0');
-      }
-
-      // Set blurhash and load image
-      this.setBlurhashBackground(
-        imageData.blurhash,
-        imageData.width,
-        imageData.height
-      );
-      this.img.src = imageData.url;
+      const newIndex = (this.currentIndex + 1) % this.triggerElements.length;
+      const newTrigger = this.triggerElements[newIndex];
+      const newImageId = newTrigger.getAttribute('data-image-id')!;
+      this.openLightbox(newImageId);
     }
   }
 

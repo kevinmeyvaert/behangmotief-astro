@@ -9,13 +9,7 @@ import BlurHashImage from '@/components/BlurHashImage.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import Header from '@/components/Header.astro';
 import { formatPostDate } from '@/lib/date';
-import type { AlbumQuery } from '@/types/wannabes.types';
-
-interface AlbumImage {
-  hires: string;
-  blurhash: string;
-  dimensions?: { width: number; height: number };
-}
+import type { AlbumQuery, Image, Post } from '@/types/wannabes.types';
 
 const { slug } = Astro.params;
 const lang = getLangFromUrl(Astro.url);
@@ -57,13 +51,14 @@ const description = descriptions(post.venue.name, post.artist.name);
 
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-24">
           {
-            post.images.map((image: AlbumImage) => (
+            post.images.map((image) => (
               <div
                 class="aspect-square overflow-hidden cursor-pointer"
                 style={{
                   boxShadow: '0 30px 60px -10px rgba(0, 0, 0, 0.2)',
                 }}
                 data-album-image-trigger
+                data-image-id={image.id}
                 data-full-image={`https://images.wannabes.be/S=W2500,H2500,PD1/${image.hires}`}
                 data-blurhash={image.blurhash}
                 data-width={image.dimensions?.width || 800}
