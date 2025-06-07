@@ -10,7 +10,6 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const photoSets = await getPhotoSets();
-console.log(photoSets[0].photos[0]);
 ---
 
 <Layout title={t('grid.title')} description={t('grid.description')}>
