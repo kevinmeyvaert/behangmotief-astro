@@ -51,7 +51,7 @@ const description = descriptions(post.venue.name, post.artist.name);
 
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-24">
           {
-            post.images.map((image) => (
+            post.images.filter((image) => image.photographer.firstName === 'Kevin').map((image) => (
               <div
                 class="aspect-square overflow-hidden cursor-pointer"
                 style={{
