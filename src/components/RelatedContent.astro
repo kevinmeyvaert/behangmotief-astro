@@ -3,6 +3,7 @@ import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import { checkThumbnails } from '../lib/ownThumbnail';
 import { formatPostDate } from '@/lib/date';
 import BlurHashImage from './BlurHashImage.astro';
+import type { ui } from '@/i18n/ui';
 
 export interface Props {
   relatedPosts: any[];
@@ -10,10 +11,12 @@ export interface Props {
   postId: string;
   className?: string;
   type: 'artist' | 'venue';
+  locale?: keyof typeof ui;
 }
 
-const { relatedPosts, title, postId, className = '', type } = Astro.props;
-const lang = getLangFromUrl(Astro.url);
+const { relatedPosts, title, postId, className = '', type, locale } = Astro.props;
+// Use passed locale or try to detect from URL
+const lang = locale || getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 const filteredPosts = relatedPosts
   .filter((p) => p.id !== postId)

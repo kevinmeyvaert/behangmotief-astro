@@ -83,7 +83,7 @@ const description = descriptions(post.venue.name, post.artist.name);
           venueName={post.venue.name}
         />
       </section>
-      <RelatedContentSection server:defer post={post} />
+      <RelatedContentSection server:defer post={post} locale={lang} />
     </article>
   </main>
 </Layout>

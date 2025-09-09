@@ -8,12 +8,14 @@ import type {
 } from '@/types/wannabes.types';
 import { fetcher } from '@/lib/graphql-client';
 import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import type { ui } from '@/i18n/ui';
 
 interface Props {
   post: AlbumQuery['post'];
+  locale?: keyof typeof ui;
 }
 
-const { post } = Astro.props;
+const { post, locale } = Astro.props;
 
 const { sameArtist, sameVenue } = await fetcher<RelatedPostsQuery>(
   RELATED_ALBUMS,
@@ -25,7 +27,8 @@ const { sameArtist, sameVenue } = await fetcher<RelatedPostsQuery>(
 const hasMoreFromArtist = sameArtist.data?.length - 1 > 0;
 const hasMoreAtVenue = sameVenue.data?.length - 1 > 0;
 
-const lang = getLangFromUrl(Astro.url);
+// Use passed locale or try to detect from URL
+const lang = locale || getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
@@ -42,6 +45,7 @@ const t = useTranslations(lang);
           postId={post.id}
           type="artist"
           className="mb-12"
+          locale={lang}
         />
       )
     }
@@ -53,6 +57,7 @@ const t = useTranslations(lang);
           postId={post.id}
           type="venue"
           className="mb-12"
+          locale={lang}
         />
       )
     }
