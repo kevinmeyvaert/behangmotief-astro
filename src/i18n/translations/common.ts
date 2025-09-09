@@ -1,0 +1,48 @@
+export const common = {
+  en: {
+    "portfolio.title": "Featured Work",
+    "collaborate.title": "Let's Collaborate",
+    "collaborate.description":
+      "Ready to capture your next event or create stunning portraits? Get in touch to discuss your project.",
+    "collaborate.cta": "Contact Me",
+    "footer.about.title": "Behangmotief",
+    "footer.about.bio":
+      "Kevin Meyvaert is a Belgian freelance music & festival photographer based in Gent. Part of Wannabes, a rockphotography collective.",
+    "footer.referrals.title": "Referrals",
+    "footer.contact.email": "hallo@behangmotief.be",
+    "footer.contact.website": "www.behangmotief.be",
+    "pagination.previous": "previous",
+    "pagination.next": "next",
+    "pagination.aria.navigation": "Pagination",
+    "pagination.aria.previous": "Previous page",
+    "pagination.aria.next": "Next page",
+    "pagination.aria.current": "Current page",
+    "recentWork.title": "Recent Werk",
+    "searchComponent.placeholder": "Search artist, venue, or festival...",
+    "grid.title": "The Photo Grid | Behangmotief — Music & festival photographer",
+    "grid.description": "Immersive photo grid showcasing live music photography by Behangmotief.",
+  },
+  nl: {
+    "portfolio.title": "Uitgelicht werk",
+    "collaborate.title": "Laten we samenwerken",
+    "collaborate.description":
+      "Klaar om je volgende evenement vast te leggen of prachtige portretten te creëren? Neem contact op om je project te bespreken.",
+    "collaborate.cta": "Contacteer me",
+    "footer.about.title": "Behangmotief",
+    "footer.about.bio":
+      "Kevin Meyvaert is een Belgische freelance muziek- en festivaalfotograaf gevestigd in Gent. Deel van Wannabes, een rockfotografie collectief.",
+    "footer.referrals.title": "Referenties",
+    "footer.contact.email": "hallo@behangmotief.be",
+    "footer.contact.website": "www.behangmotief.be",
+    "pagination.previous": "vorige",
+    "pagination.next": "volgende",
+    "pagination.aria.navigation": "Paginering",
+    "pagination.aria.previous": "Vorige pagina",
+    "pagination.aria.next": "Volgende pagina",
+    "pagination.aria.current": "Huidige pagina",
+    "recentWork.title": "Recent Werk",
+    "searchComponent.placeholder": "Zoek artiest, locatie of festival...",
+    "grid.title": "Het Fotoraster | Behangmotief — Muziek & festivaalfotograaf",
+    "grid.description": "Meeslepend fotoraster met live muziekfotografie van Behangmotief.",
+  },
+};
