@@ -4,26 +4,14 @@ import BlurHashImage from './BlurHashImage.astro';
 import { formatPostDate } from '@/lib/date';
 import { checkThumbnails } from '@/lib/ownThumbnail';
 import { ImageUrlBuilder } from '@/lib/image-url-builder';
+import type { AlbumPost } from '@/types/components';
 
 interface Props {
-  loading: 'lazy' | 'eager';
-  posts: {
-    id: string;
-    slug: string;
-    artist: { name: string };
-    venue: { name: string };
-    event: { name: string };
-    date: string;
-    thumbnail: {
-      blurhash: string;
-      hires: string;
-      dimensions: { width: number; height: number };
-      photographer: { firstName: string };
-    };
-  }[];
+  loading?: 'lazy' | 'eager';
+  posts: AlbumPost[];
 }
 
-const { posts, loading } = Astro.props;
+const { posts, loading = 'lazy' } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 ---
