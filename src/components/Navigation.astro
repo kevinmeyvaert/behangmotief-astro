@@ -38,7 +38,7 @@ const isArchiveActive =
     >
       {t('nav.archive')}
     </a>
-    <LanguagePicker />
+    <LanguagePicker theme={theme} />
   </div>
 
   <!-- Mobile Menu Button -->
@@ -101,8 +101,8 @@ const isArchiveActive =
           >
             {t('nav.archive')}
           </a>
-          <div class={`${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            <LanguagePicker />
+          <div>
+            <LanguagePicker theme={theme} />
           </div>
         </div>
       </div>

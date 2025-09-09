@@ -2,6 +2,11 @@
 import { getLangFromUrl } from '@/i18n/utils';
 import { languages, routes } from '../i18n/ui';
 
+interface Props {
+  theme?: 'light' | 'dark';
+}
+
+const { theme = 'light' } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 
 // Get the current path segments
@@ -23,9 +28,121 @@ if (currentSegment) {
     baseRoute = matchingRoute[0] as keyof (typeof routes)[keyof typeof routes];
   }
 }
+
+// Get language codes array for positioning
+const langCodes = Object.keys(languages);
+const activeIndex = langCodes.indexOf(lang);
 ---
 
-<div class="flex items-center space-x-2">
+<style>
+  .language-picker {
+    position: relative;
+    display: inline-flex;
+    border-radius: 9999px;
+    padding: 2px;
+    transition: all 0.2s ease;
+  }
+  
+  .language-picker.light {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+  
+  .language-picker.dark {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  .slider {
+    position: absolute;
+    top: 2px;
+    height: calc(100% - 4px);
+    width: calc(50% - 2px);
+    border-radius: 9999px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 0;
+  }
+  
+  .slider.light {
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .slider.dark {
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+  }
+  
+  .language-option {
+    position: relative;
+    z-index: 1;
+    padding: 6px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 50px;
+    justify-content: center;
+    user-select: none;
+  }
+  
+  .language-option.light.inactive {
+    color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .language-option.light.inactive:hover {
+    color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .language-option.light.active {
+    color: #000;
+    font-weight: 600;
+  }
+  
+  .language-option.dark.inactive {
+    color: rgba(255, 255, 255, 0.6);
+  }
+  
+  .language-option.dark.inactive:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  
+  .language-option.dark.active {
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .flag {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    display: inline-block;
+    font-size: 12px;
+  }
+  
+  /* Mobile adjustments */
+  @media (max-width: 768px) {
+    .language-option {
+      padding: 8px 20px;
+      font-size: 16px;
+    }
+    
+    .flag {
+      width: 18px;
+      height: 18px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<div class={`language-picker ${theme}`} data-language-picker>
+  <div 
+    class={`slider ${theme}`}
+    style={`transform: translateX(${activeIndex * 100}%);`}
+  ></div>
   {
     Object.entries(languages).map(([code, label]) => {
       let path = '';
@@ -45,19 +162,29 @@ if (currentSegment) {
         path = `/${pathSegments.join('/')}`;
       }
 
+      const isActive = code === lang;
+      
       return (
         <a
           href={`/${code}${path}`}
-          class:list={[
-            'px-3 py-1 rounded-lg transition-colors uppercase text-sm',
-            code === lang
-              ? 'bg-black text-white font-bold'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 font-medium',
-          ]}
+          class={`language-option ${theme} ${isActive ? 'active' : 'inactive'}`}
+          aria-current={isActive ? 'page' : undefined}
+          aria-label={`Switch to ${label}`}
         >
-          {code}
+          <span class="flag">{code === 'nl' ? '🇳🇱' : '🇬🇧'}</span>
+          <span>{code}</span>
         </a>
       );
     })
   }
 </div>
+
+<script>
+  // Add smooth transition on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    const picker = document.querySelector('[data-language-picker]');
+    if (picker) {
+      picker.classList.add('loaded');
+    }
+  });
+</script>
