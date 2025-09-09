@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import BlurHashImage from './BlurHashImage.astro';
+import MasonryGrid from './MasonryGrid.astro';
 import { formatPostDate } from '@/lib/date';
 import { checkThumbnails } from '@/lib/ownThumbnail';
 import { ImageUrlBuilder } from '@/lib/image-url-builder';
@@ -16,29 +17,7 @@ const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 ---
 
-<style>
-  .masonry {
-    column-count: 1;
-    column-gap: 1.5rem;
-  }
-  @media (min-width: 768px) {
-    .masonry {
-      column-count: 2;
-    }
-  }
-  @media (min-width: 1024px) {
-    .masonry {
-      column-count: 3;
-    }
-  }
-  .masonry-item {
-    break-inside: avoid;
-    margin-bottom: 1.5rem;
-    display: block;
-  }
-</style>
-
-<div class="masonry">
+<MasonryGrid>
   {
     posts.map(checkThumbnails).map((post) => {
       return (
@@ -75,4 +54,4 @@ const translatePath = useTranslatedPath(lang);
       );
     })
   }
-</div>
+</MasonryGrid>
