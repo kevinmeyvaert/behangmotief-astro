@@ -3,6 +3,7 @@ import { getLangFromUrl, useTranslatedPath } from '@/i18n/utils';
 import BlurHashImage from './BlurHashImage.astro';
 import { formatPostDate } from '@/lib/date';
 import { checkThumbnails } from '@/lib/ownThumbnail';
+import { ImageUrlBuilder } from '@/lib/image-url-builder';
 
 interface Props {
   loading: 'lazy' | 'eager';
@@ -66,7 +67,7 @@ const translatePath = useTranslatedPath(lang);
           >
             <BlurHashImage
               blurhash={post.thumbnail.blurhash}
-              src={`https://images.wannabes.be/S=W750,H750,PD1/${post.thumbnail.hires}`}
+              src={ImageUrlBuilder.build(post.thumbnail.hires, { width: 750, height: 750 })}
               alt={`${post.artist.name} at ${post.venue.name}`}
               width={post.thumbnail.dimensions.width}
               height={post.thumbnail.dimensions.height}

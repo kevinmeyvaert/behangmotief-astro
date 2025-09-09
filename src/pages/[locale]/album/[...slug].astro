@@ -8,6 +8,7 @@ import BlurHashImage from '@/components/BlurHashImage.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import Header from '@/components/Header.astro';
 import { formatPostDate } from '@/lib/date';
+import { ImageUrlBuilder } from '@/lib/image-url-builder';
 import type { Image, Post } from '@/types/wannabes.types';
 
 const { slug } = Astro.params;
@@ -58,13 +59,13 @@ const description = descriptions(post.venue.name, post.artist.name);
                 }}
                 data-album-image-trigger
                 data-image-id={image.id}
-                data-full-image={`https://images.wannabes.be/S=W2500,H2500,PD1/${image.hires}`}
+                data-full-image={ImageUrlBuilder.hero(image.hires)}
                 data-blurhash={image.blurhash}
                 data-width={image.dimensions?.width || 800}
                 data-height={image.dimensions?.height || 800}
               >
                 <BlurHashImage
-                  src={`https://images.wannabes.be/S=W500,H500,PD1/C=SQ/${image.hires}`}
+                  src={ImageUrlBuilder.square(image.hires, 500)}
                   alt={`${post.artist.name} at ${post.venue.name}`}
                   width={500}
                   height={500}
