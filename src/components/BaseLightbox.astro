@@ -1,0 +1,350 @@
+---
+export interface LightboxImage {
+  id?: string;
+  url: string;
+  alt: string;
+  blurhash?: string;
+  width?: number;
+  height?: number;
+}
+
+interface Props {
+  images: LightboxImage[];
+  enableNavigation?: boolean;
+  enableUrlParams?: boolean;
+  triggerSelector?: string;
+  className?: string;
+}
+
+const { 
+  images, 
+  enableNavigation = false,
+  enableUrlParams = false,
+  triggerSelector = '[data-lightbox-trigger]',
+  className = ''
+} = Astro.props;
+
+const isGallery = images.length > 1;
+---
+
+<div class={`base-lightbox ${className}`} data-lightbox-container>
+  <div
+    class="lightbox-overlay hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
+    data-lightbox-overlay
+  >
+    <button
+      class="absolute top-4 right-4 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+      data-lightbox-close
+      aria-label="Close lightbox"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-8 h-8"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    
+    {enableNavigation && isGallery && (
+      <>
+        <button
+          class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+          data-lightbox-prev
+          aria-label="Previous image"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+          </svg>
+        </button>
+        <button
+          class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 p-2 cursor-pointer z-10"
+          data-lightbox-next
+          aria-label="Next image"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-8 h-8"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+          </svg>
+        </button>
+      </>
+    )}
+    
+    <div class="relative flex items-center justify-center w-full h-full p-4">
+      <div class="relative w-auto h-auto">
+        {images[0].blurhash && (
+          <div
+            class="absolute inset-0 flex items-center justify-center"
+            data-lightbox-blurhash
+          >
+            <div
+              class="bg-center bg-cover bg-no-repeat opacity-100 transition-opacity duration-300"
+            >
+            </div>
+          </div>
+        )}
+        <div
+          class="absolute inset-0 flex items-center justify-center z-10"
+          data-lightbox-spinner
+        >
+          <div
+            class="animate-spin rounded-full h-10 w-10 border-2 border-white/20 border-t-white"
+          >
+          </div>
+        </div>
+        <img
+          src=""
+          alt=""
+          class="relative max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain opacity-0 transition-opacity duration-300"
+          data-lightbox-image
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ 
+  images, 
+  enableNavigation, 
+  enableUrlParams,
+  triggerSelector 
+}}>
+  import { decode } from 'blurhash';
+
+  class BaseLightbox {
+    private currentIndex = 0;
+    private container: HTMLElement;
+    private overlay: HTMLElement;
+    private img: HTMLImageElement;
+    private spinner: HTMLElement | null;
+    private blurhashEl: HTMLElement | null;
+    private images: typeof images;
+    private triggerElements: NodeListOf<Element>;
+
+    constructor(container: HTMLElement) {
+      this.container = container;
+      this.images = images;
+      this.overlay = container.querySelector('[data-lightbox-overlay]')!;
+      this.img = container.querySelector('[data-lightbox-image]')!;
+      this.spinner = container.querySelector('[data-lightbox-spinner]');
+      this.blurhashEl = container.querySelector('[data-lightbox-blurhash]');
+      this.triggerElements = document.querySelectorAll(triggerSelector);
+
+      this.initializeEventListeners();
+      this.checkUrlParams();
+    }
+
+    private initializeEventListeners() {
+      const closeButton = this.container.querySelector('[data-lightbox-close]');
+      const prevButton = this.container.querySelector('[data-lightbox-prev]');
+      const nextButton = this.container.querySelector('[data-lightbox-next]');
+
+      this.img.addEventListener('load', () => this.handleImageLoad());
+
+      this.triggerElements.forEach((trigger, index) => {
+        trigger.addEventListener('click', () => {
+          const imageId = trigger.getAttribute('data-image-id');
+          const triggerIndex = imageId ? this.getImageIndexById(imageId) : index;
+          if (triggerIndex !== -1) {
+            this.openLightbox(triggerIndex);
+          }
+        });
+      });
+
+      closeButton?.addEventListener('click', () => this.closeLightbox());
+      prevButton?.addEventListener('click', () => this.showPrevImage());
+      nextButton?.addEventListener('click', () => this.showNextImage());
+
+      this.overlay.addEventListener('click', (e) => {
+        if (e.target === this.overlay) {
+          this.closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (!this.overlay.classList.contains('hidden')) {
+          switch (e.key) {
+            case 'Escape':
+              this.closeLightbox();
+              break;
+            case 'ArrowLeft':
+              if (enableNavigation) this.showPrevImage();
+              break;
+            case 'ArrowRight':
+              if (enableNavigation) this.showNextImage();
+              break;
+          }
+        }
+      });
+    }
+
+    private handleImageLoad() {
+      if (this.spinner) {
+        this.spinner.style.display = 'none';
+      }
+      this.img.classList.remove('opacity-0');
+      const blurhashDiv = this.blurhashEl?.querySelector('div');
+      if (blurhashDiv) {
+        blurhashDiv.classList.add('opacity-0');
+      }
+    }
+
+    private getImageIndexById(id: string): number {
+      return this.images.findIndex(img => img.id === id);
+    }
+
+    private checkUrlParams() {
+      if (!enableUrlParams) return;
+      
+      const urlParams = new URLSearchParams(window.location.search);
+      const imageId = urlParams.get('image');
+      if (imageId) {
+        const index = this.getImageIndexById(imageId);
+        if (index !== -1) {
+          this.openLightbox(index);
+        }
+      }
+    }
+
+    private updateUrl() {
+      if (!enableUrlParams) return;
+      
+      const currentImage = this.images[this.currentIndex];
+      if (currentImage.id) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('image', currentImage.id);
+        window.history.pushState({}, '', url);
+      }
+    }
+
+    private clearUrl() {
+      if (!enableUrlParams) return;
+      
+      const url = new URL(window.location.href);
+      url.searchParams.delete('image');
+      window.history.pushState({}, '', url);
+    }
+
+    private async setBlurhashBackground(image: typeof images[0]) {
+      if (!image.blurhash || !this.blurhashEl) return;
+
+      try {
+        const pixels = decode(image.blurhash, 32, 32);
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const imageData = ctx.createImageData(32, 32);
+        imageData.data.set(pixels);
+        ctx.putImageData(imageData, 0, 0);
+        
+        const blurhashDiv = this.blurhashEl.querySelector('div') as HTMLElement;
+        if (blurhashDiv && image.width && image.height) {
+          const size = this.calculateBlurhashSize(image.width, image.height);
+          blurhashDiv.style.width = `${size.width}px`;
+          blurhashDiv.style.height = `${size.height}px`;
+          blurhashDiv.style.backgroundImage = `url(${canvas.toDataURL()})`;
+          blurhashDiv.classList.remove('opacity-0');
+        }
+      } catch (error) {
+        console.error('Error decoding blurhash:', error);
+      }
+    }
+
+    private calculateBlurhashSize(width: number, height: number) {
+      const viewportWidth = window.innerWidth * 0.9;
+      const viewportHeight = window.innerHeight * 0.9;
+      const aspectRatio = width / height;
+
+      let finalWidth, finalHeight;
+      
+      if (width > height) {
+        finalHeight = viewportWidth / aspectRatio;
+        if (finalHeight <= viewportHeight) {
+          finalWidth = viewportWidth;
+        } else {
+          finalWidth = viewportHeight * aspectRatio;
+          finalHeight = viewportHeight;
+        }
+      } else {
+        finalWidth = viewportHeight * aspectRatio;
+        if (finalWidth <= viewportWidth) {
+          finalHeight = viewportHeight;
+        } else {
+          finalWidth = viewportWidth;
+          finalHeight = viewportWidth / aspectRatio;
+        }
+      }
+
+      return { width: finalWidth, height: finalHeight };
+    }
+
+    private openLightbox(index: number) {
+      this.currentIndex = index;
+      const image = this.images[index];
+      
+      this.overlay.classList.remove('hidden');
+      if (this.spinner) {
+        this.spinner.style.display = 'flex';
+      }
+      this.img.classList.add('opacity-0');
+      document.body.style.overflow = 'hidden';
+
+      this.img.src = image.url;
+      this.img.alt = image.alt;
+      this.setBlurhashBackground(image);
+      this.updateUrl();
+    }
+
+    private closeLightbox() {
+      this.overlay.classList.add('hidden');
+      document.body.style.overflow = '';
+      this.img.src = '';
+      this.clearUrl();
+    }
+
+    private showPrevImage() {
+      const newIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
+      this.openLightbox(newIndex);
+    }
+
+    private showNextImage() {
+      const newIndex = (this.currentIndex + 1) % this.images.length;
+      this.openLightbox(newIndex);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('[data-lightbox-container]');
+    if (container) {
+      new BaseLightbox(container as HTMLElement);
+    }
+  });
+</script>
