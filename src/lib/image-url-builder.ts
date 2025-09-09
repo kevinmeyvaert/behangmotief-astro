@@ -22,18 +22,14 @@ export class ImageUrlBuilder {
 
     const params: string[] = [];
     
-    // Size parameters
-    if (width || height) {
+    // Combine size, crop, and pixel density parameters into single S= parameter
+    if (width || height || crop) {
       const sizeParams: string[] = [];
       if (width) sizeParams.push(`W${width}`);
       if (height) sizeParams.push(`H${height}`);
+      if (crop) sizeParams.push(`C=${crop}`);
       if (pixelDensity !== 1) sizeParams.push(`PD${pixelDensity}`);
       params.push(`S=${sizeParams.join(',')}`);
-    }
-    
-    // Crop parameter
-    if (crop) {
-      params.push(`C=${crop}`);
     }
     
     // Format parameter
