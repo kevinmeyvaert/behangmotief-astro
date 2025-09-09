@@ -77,7 +77,11 @@ const description = descriptions(post.venue.name, post.artist.name);
             ))
           }
         </div>
-        <AlbumLightbox alt={`${post.artist.name} at ${post.venue.name}`} />
+        <AlbumLightbox 
+          images={post.images}
+          artistName={post.artist.name}
+          venueName={post.venue.name}
+        />
       </section>
       <RelatedContentSection server:defer post={post} />
     </article>

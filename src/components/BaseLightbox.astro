@@ -97,7 +97,7 @@ const isGallery = images.length > 1;
     
     <div class="relative flex items-center justify-center w-full h-full p-4">
       <div class="relative w-auto h-auto">
-        {images[0].blurhash && (
+        {images.length > 0 && images[0].blurhash && (
           <div
             class="absolute inset-0 flex items-center justify-center"
             data-lightbox-blurhash
@@ -129,7 +129,7 @@ const isGallery = images.length > 1;
 </div>
 
 <script define:vars={{ 
-  images, 
+  images,
   enableNavigation, 
   enableUrlParams,
   triggerSelector 

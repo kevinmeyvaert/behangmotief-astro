@@ -1,38 +1,40 @@
 ---
 import BaseLightbox, { type LightboxImage } from './BaseLightbox.astro';
+import { ImageUrlBuilder } from '@/lib/image-url-builder';
 
 interface Props {
-  alt: string;
+  images: Array<{
+    id: string;
+    blurhash: string;
+    hires: string;
+    dimensions?: {
+      width: number;
+      height: number;
+    };
+  }>;
+  artistName: string;
+  venueName: string;
 }
 
-const { alt } = Astro.props;
+const { images, artistName, venueName } = Astro.props;
+
+// Transform images for the lightbox
+const lightboxImages: LightboxImage[] = images.map(image => ({
+  id: image.id,
+  url: ImageUrlBuilder.hero(image.hires),
+  alt: `${artistName} at ${venueName}`,
+  blurhash: image.blurhash,
+  width: image.dimensions?.width,
+  height: image.dimensions?.height,
+}));
 ---
 
 <div class="album-lightbox">
   <BaseLightbox
-    images={[]}
+    images={lightboxImages}
     enableNavigation={true}
     enableUrlParams={true}
     triggerSelector="[data-album-image-trigger]"
     className="album"
   />
 </div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const triggers = document.querySelectorAll('[data-album-image-trigger]');
-    const images = Array.from(triggers).map((trigger) => ({
-      id: trigger.getAttribute('data-image-id') || '',
-      url: trigger.getAttribute('data-full-image') || '',
-      alt: trigger.getAttribute('data-alt') || '',
-      blurhash: trigger.getAttribute('data-blurhash') || undefined,
-      width: parseInt(trigger.getAttribute('data-width') || '0', 10) || undefined,
-      height: parseInt(trigger.getAttribute('data-height') || '0', 10) || undefined,
-    }));
-
-    const container = document.querySelector('.album-lightbox [data-lightbox-container]');
-    if (container) {
-      container.setAttribute('data-images', JSON.stringify(images));
-    }
-  });
-</script>
