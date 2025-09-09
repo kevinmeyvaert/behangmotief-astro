@@ -28,6 +28,7 @@ const isGallery = images.length > 1;
 ---
 
 <div class={`base-lightbox ${className}`} data-lightbox-container>
+  <script type="application/json" data-lightbox-data set:html={JSON.stringify({ images, enableNavigation, enableUrlParams, triggerSelector })} />
   <div
     class="lightbox-overlay hidden fixed inset-0 bg-black/90 z-50 flex items-center justify-center"
     data-lightbox-overlay
@@ -128,29 +129,35 @@ const isGallery = images.length > 1;
   </div>
 </div>
 
-<script define:vars={{ 
-  images,
-  enableNavigation, 
-  enableUrlParams,
-  triggerSelector 
-}}>
-  import { decode } from 'blurhash';
+<script type="module">
+  // Try to import blurhash, but continue if it fails
+  let decode = null;
+  try {
+    const blurhashModule = await import('blurhash');
+    decode = blurhashModule.decode;
+  } catch (e) {
+    console.warn('Blurhash module not available, continuing without blur placeholders');
+  }
+  
+  // Wait for DOM to be ready
+  document.addEventListener('DOMContentLoaded', () => {
+    // Get the container and its configuration
+    const containers = document.querySelectorAll('[data-lightbox-container]');
+    
+    containers.forEach(container => {
+      const dataEl = container.querySelector('[data-lightbox-data]');
+      if (!dataEl) return;
+      
+      const config = JSON.parse(dataEl.textContent);
+      const { images, enableNavigation, enableUrlParams, triggerSelector } = config;
 
   class BaseLightbox {
-    private currentIndex = 0;
-    private container: HTMLElement;
-    private overlay: HTMLElement;
-    private img: HTMLImageElement;
-    private spinner: HTMLElement | null;
-    private blurhashEl: HTMLElement | null;
-    private images: typeof images;
-    private triggerElements: NodeListOf<Element>;
-
-    constructor(container: HTMLElement) {
+    constructor(container) {
+      this.currentIndex = 0;
       this.container = container;
       this.images = images;
-      this.overlay = container.querySelector('[data-lightbox-overlay]')!;
-      this.img = container.querySelector('[data-lightbox-image]')!;
+      this.overlay = container.querySelector('[data-lightbox-overlay]');
+      this.img = container.querySelector('[data-lightbox-image]');
       this.spinner = container.querySelector('[data-lightbox-spinner]');
       this.blurhashEl = container.querySelector('[data-lightbox-blurhash]');
       this.triggerElements = document.querySelectorAll(triggerSelector);
@@ -159,7 +166,7 @@ const isGallery = images.length > 1;
       this.checkUrlParams();
     }
 
-    private initializeEventListeners() {
+    initializeEventListeners() {
       const closeButton = this.container.querySelector('[data-lightbox-close]');
       const prevButton = this.container.querySelector('[data-lightbox-prev]');
       const nextButton = this.container.querySelector('[data-lightbox-next]');
@@ -203,7 +210,7 @@ const isGallery = images.length > 1;
       });
     }
 
-    private handleImageLoad() {
+    handleImageLoad() {
       if (this.spinner) {
         this.spinner.style.display = 'none';
       }
@@ -214,11 +221,11 @@ const isGallery = images.length > 1;
       }
     }
 
-    private getImageIndexById(id: string): number {
+    getImageIndexById(id) {
       return this.images.findIndex(img => img.id === id);
     }
 
-    private checkUrlParams() {
+    checkUrlParams() {
       if (!enableUrlParams) return;
       
       const urlParams = new URLSearchParams(window.location.search);
@@ -231,7 +238,7 @@ const isGallery = images.length > 1;
       }
     }
 
-    private updateUrl() {
+    updateUrl() {
       if (!enableUrlParams) return;
       
       const currentImage = this.images[this.currentIndex];
@@ -242,7 +249,7 @@ const isGallery = images.length > 1;
       }
     }
 
-    private clearUrl() {
+    clearUrl() {
       if (!enableUrlParams) return;
       
       const url = new URL(window.location.href);
@@ -250,8 +257,8 @@ const isGallery = images.length > 1;
       window.history.pushState({}, '', url);
     }
 
-    private async setBlurhashBackground(image: typeof images[0]) {
-      if (!image.blurhash || !this.blurhashEl) return;
+    async setBlurhashBackground(image) {
+      if (!image.blurhash || !this.blurhashEl || !decode) return;
 
       try {
         const pixels = decode(image.blurhash, 32, 32);
@@ -265,7 +272,7 @@ const isGallery = images.length > 1;
         imageData.data.set(pixels);
         ctx.putImageData(imageData, 0, 0);
         
-        const blurhashDiv = this.blurhashEl.querySelector('div') as HTMLElement;
+        const blurhashDiv = this.blurhashEl.querySelector('div');
         if (blurhashDiv && image.width && image.height) {
           const size = this.calculateBlurhashSize(image.width, image.height);
           blurhashDiv.style.width = `${size.width}px`;
@@ -278,7 +285,7 @@ const isGallery = images.length > 1;
       }
     }
 
-    private calculateBlurhashSize(width: number, height: number) {
+    calculateBlurhashSize(width, height) {
       const viewportWidth = window.innerWidth * 0.9;
       const viewportHeight = window.innerHeight * 0.9;
       const aspectRatio = width / height;
@@ -306,7 +313,7 @@ const isGallery = images.length > 1;
       return { width: finalWidth, height: finalHeight };
     }
 
-    private openLightbox(index: number) {
+    openLightbox(index) {
       this.currentIndex = index;
       const image = this.images[index];
       
@@ -323,28 +330,26 @@ const isGallery = images.length > 1;
       this.updateUrl();
     }
 
-    private closeLightbox() {
+    closeLightbox() {
       this.overlay.classList.add('hidden');
       document.body.style.overflow = '';
       this.img.src = '';
       this.clearUrl();
     }
 
-    private showPrevImage() {
+    showPrevImage() {
       const newIndex = (this.currentIndex - 1 + this.images.length) % this.images.length;
       this.openLightbox(newIndex);
     }
 
-    private showNextImage() {
+    showNextImage() {
       const newIndex = (this.currentIndex + 1) % this.images.length;
       this.openLightbox(newIndex);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('[data-lightbox-container]');
-    if (container) {
-      new BaseLightbox(container as HTMLElement);
-    }
+      // Instantiate the lightbox for this container
+      new BaseLightbox(container);
+    });
   });
 </script>
