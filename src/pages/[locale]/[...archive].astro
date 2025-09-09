@@ -5,13 +5,11 @@ import {
   useTranslatedPath,
   useTranslations,
 } from '../../i18n/utils';
-import { fetcher } from '../../lib/graphql-client';
+import { albumsService } from '@/services/albums.service';
 import PostGrid from '../../components/PostGrid.astro';
 import Pagination from '../../components/Pagination.astro';
 import Header from '@/components/Header.astro';
 import SearchField from '@/components/SearchField.astro';
-import { POSTS } from '@/lib/queries';
-import type { SearchQuery } from '@/types/wannabes.types';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -22,14 +20,14 @@ const searchParam = Astro.url.searchParams.get('search') || '';
 const currentPage = parseInt(Astro.url.searchParams.get('page') || '1');
 const POSTS_PER_PAGE = 15;
 
-// Fetch posts with pagination
-const { posts } = await fetcher<SearchQuery>(POSTS, {
+// Fetch posts with pagination using the service
+const { albums, pagination } = await albumsService.searchAlbums({
   start: (currentPage - 1) * POSTS_PER_PAGE,
   limit: POSTS_PER_PAGE,
-  all: searchParam || undefined,
+  searchTerm: searchParam || undefined,
 });
 
-const totalPages = Math.ceil(posts.pagination.total / POSTS_PER_PAGE);
+const totalPages = Math.ceil(pagination.total / POSTS_PER_PAGE);
 ---
 
 <Layout title={t('archive.title')} description={t('archive.description')}>
@@ -40,7 +38,7 @@ const totalPages = Math.ceil(posts.pagination.total / POSTS_PER_PAGE);
       archiveRoute={translatePath('/archive')}
     />
 
-    <PostGrid posts={posts.data} loading="eager" />
+    <PostGrid posts={albums} loading="eager" />
 
     <div class="my-12">
       <Pagination

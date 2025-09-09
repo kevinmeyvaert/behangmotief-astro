@@ -1,15 +1,14 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
-import { fetcher } from '@/lib/graphql-client';
-import { ALBUM, ALBUM_PATHS } from '@/lib/queries';
+import { albumsService } from '@/services/albums.service';
 import { routes } from '@/i18n/ui';
 import AlbumLightbox from '@/components/AlbumLightbox.astro';
 import BlurHashImage from '@/components/BlurHashImage.astro';
 import RelatedContentSection from '@/components/RelatedContentSection.astro';
 import Header from '@/components/Header.astro';
 import { formatPostDate } from '@/lib/date';
-import type { AlbumQuery, Image, Post } from '@/types/wannabes.types';
+import type { Image, Post } from '@/types/wannabes.types';
 
 const { slug } = Astro.params;
 const lang = getLangFromUrl(Astro.url);
@@ -18,8 +17,8 @@ const t = useTranslations(lang);
 // Join the slug array into a path string
 const slugPath = Array.isArray(slug) ? slug.join('/') : slug;
 
-// Fetch the album data
-const { post } = await fetcher<AlbumQuery>(ALBUM, { slug: slugPath });
+// Fetch the album data using the service
+const post = await albumsService.getAlbumBySlug(slugPath!);
 
 // Get a random description from the translations
 const descriptions = (venue?: string, artist?: string) => {
@@ -51,7 +50,7 @@ const description = descriptions(post.venue.name, post.artist.name);
 
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-24">
           {
-            post.images.filter((image) => image.photographer.firstName === 'Kevin').map((image) => (
+            post.images.map((image) => (
               <div
                 class="aspect-square overflow-hidden cursor-pointer"
                 style={{
