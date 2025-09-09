@@ -83,7 +83,6 @@ const activeIndex = langCodes.indexOf(lang);
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 6px;
     min-width: 50px;
     justify-content: center;
     user-select: none;
@@ -115,25 +114,11 @@ const activeIndex = langCodes.indexOf(lang);
     font-weight: 600;
   }
   
-  .flag {
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-    display: inline-block;
-    font-size: 12px;
-  }
-  
   /* Mobile adjustments */
   @media (max-width: 768px) {
     .language-option {
       padding: 8px 20px;
       font-size: 16px;
-    }
-    
-    .flag {
-      width: 18px;
-      height: 18px;
-      font-size: 14px;
     }
   }
 </style>
@@ -171,7 +156,6 @@ const activeIndex = langCodes.indexOf(lang);
           aria-current={isActive ? 'page' : undefined}
           aria-label={`Switch to ${label}`}
         >
-          <span class="flag">{code === 'nl' ? '🇳🇱' : '🇬🇧'}</span>
           <span>{code}</span>
         </a>
       );
