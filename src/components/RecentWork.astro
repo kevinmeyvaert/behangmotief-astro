@@ -3,16 +3,21 @@ import { fetcher } from '@/lib/graphql-client';
 import { POSTS } from '@/lib/queries';
 import PostGrid from './PostGrid.astro';
 import type { SearchQuery } from '@/types/wannabes.types';
-import { getLangFromUrl, useTranslations } from '@/i18n/utils';
+import { useTranslations } from '@/i18n/utils';
 import { Image } from 'astro:assets';
+
+interface Props {
+  locale: keyof typeof import('@/i18n/ui').ui;
+}
+
+const { locale } = Astro.props;
 
 const { posts } = await fetcher<SearchQuery>(POSTS, {
   start: 0,
   limit: 6,
 });
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const t = useTranslations(locale);
 ---
 
 <section class="w-full bg-black text-white relative">

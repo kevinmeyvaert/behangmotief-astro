@@ -11,7 +11,6 @@ export const homepage = {
       "With years of experience in music photography, I specialize in capturing the raw energy and emotion of live performances. From intimate club shows to massive festival stages, I bring a unique perspective to every shot.",
     "about.description2":
       "My work focuses on creating timeless images that tell the story of each performance, preserving the magic of live music for years to come.",
-    "about.cta": "✨ vibe check ✨",
   },
   nl: {
     "landing.title": "Behangmotief — Muziek & festivaalfotograaf",
@@ -25,6 +24,5 @@ export const homepage = {
       "Met jarenlange ervaring in muziekfotografie specialiseer ik me in het vastleggen van de rauwe energie en emotie van live optredens. Van intieme clubshows tot enorme festivalpodia, ik breng een uniek perspectief naar elke foto.",
     "about.description2":
       "Mijn werk richt zich op het creëren van tijdloze beelden die het verhaal van elke voorstelling vertellen en de magie van live muziek voor de komende jaren bewaren.",
-    "about.cta": "✨ vibe check ✨",
   },
 };
