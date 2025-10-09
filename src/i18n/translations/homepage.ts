@@ -13,9 +13,9 @@ export const homepage = {
       "My work focuses on creating timeless images that tell the story of each performance, preserving the magic of live music for years to come.",
   },
   nl: {
-    "landing.title": "Behangmotief — Muziek & festivaalfotograaf",
+    "landing.title": "Behangmotief — Muziek & festivalfotograaf",
     "landing.description":
-      "Behangmotief is een muziek- en festivaalfotograaf bekend om levendige beelden met een hoog contrast die de energie van live optredens vastleggen. Met een snelle, betrouwbare doorlooptijd levert Behangmotief dynamische beelden vol kleur en beweging, die elk moment veranderen in een impactvol verhaal voor artiesten, locaties en festivals.",
+      "Behangmotief is een muziek- en festivalfotograaf bekend om levendige beelden met een hoog contrast die de energie van live optredens vastleggen. Met een snelle, betrouwbare doorlooptijd levert Behangmotief dynamische beelden vol kleur en beweging, die elk moment veranderen in een impactvol verhaal voor artiesten, locaties en festivals.",
     "hero.title": "Momenten in muziek vastleggen",
     "hero.subtitle": "Professionele muziek- & festivalfotografie",
     "hero.cta": "Maak kennis met mij 🙋‍♂️",

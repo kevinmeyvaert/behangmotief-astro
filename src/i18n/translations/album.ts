@@ -19,7 +19,7 @@ export const album = {
     "album.more_at_venue": "Same venue: {venue}",
   },
   nl: {
-    "album.title": "Album | Behangmotief — Muziek & festivaalfotograaf",
+    "album.title": "Album | Behangmotief — Muziek & festivalfotograaf",
     "album.description":
       "Bekijk alle foto's uit een album. Doorloop mijn archief van meer dan 6 jaar muziekfotografie.",
     "album.descriptions": [

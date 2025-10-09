@@ -29,7 +29,7 @@ export const common = {
     "collaborate.cta": "Contacteer me",
     "footer.about.title": "Behangmotief",
     "footer.about.bio":
-      "Kevin Meyvaert is een Belgische freelance muziek- en festivaalfotograaf gevestigd in Gent. Deel van Wannabes, een rockfotografie collectief.",
+      "Kevin Meyvaert is een Belgische freelance muziek- en festivalfotograaf gevestigd in Gent. Deel van Wannabes, een rockfotografie collectief.",
     "footer.referrals.title": "Referenties",
     "footer.contact.email": "hallo@behangmotief.be",
     "footer.contact.website": "www.behangmotief.be",

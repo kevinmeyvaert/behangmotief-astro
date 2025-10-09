@@ -7,6 +7,6 @@ export const navigation = {
   nl: {
     "nav.home": "Home",
     "nav.archive": "Archief",
-    "nav.photographer.tagline": "| muziek & festivaalfotograaf",
+    "nav.photographer.tagline": "| muziek & festivalfotograaf",
   },
 };

@@ -11,7 +11,7 @@ export const archive = {
     "search.no.results.message": "No albums found for '{searchTerm}'. Try adjusting your search terms.",
   },
   nl: {
-    "archive.title": "Archief | Behangmotief — Muziek & festivaalfotograaf",
+    "archive.title": "Archief | Behangmotief — Muziek & festivalfotograaf",
     "archive.description":
       "Zoek foto's op artiest, locatie of festival. Doorloop mijn archief van meer dan 6 jaar muziekfotografie.",
     "archiveSection.title": "Doorzoek het archief",
