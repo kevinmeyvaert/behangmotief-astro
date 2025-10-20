@@ -208,6 +208,49 @@ const isGallery = images.length > 1;
           }
         }
       });
+
+      // Handle browser back/forward navigation
+      window.addEventListener('popstate', () => {
+        this.handlePopState();
+      });
+    }
+
+    handlePopState() {
+      if (!enableUrlParams) return;
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const imageId = urlParams.get('image');
+
+      if (imageId) {
+        // User navigated to a URL with an image parameter
+        const index = this.getImageIndexById(imageId);
+        if (index !== -1) {
+          // Don't update URL again since we're responding to a popstate
+          const wasHidden = this.overlay.classList.contains('hidden');
+          this.currentIndex = index;
+          const image = this.images[index];
+
+          this.overlay.classList.remove('hidden');
+          if (this.spinner) {
+            this.spinner.style.display = 'flex';
+          }
+          this.img.classList.add('opacity-0');
+          document.body.style.overflow = 'hidden';
+
+          this.img.src = image.url;
+          this.img.alt = image.alt;
+          this.setBlurhashBackground(image);
+          // Don't call updateUrl() here to avoid pushing to history again
+        }
+      } else {
+        // User navigated back to base URL without image parameter
+        if (!this.overlay.classList.contains('hidden')) {
+          this.overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+          this.img.src = '';
+          // Don't call clearUrl() here to avoid pushing to history again
+        }
+      }
     }
 
     handleImageLoad() {
