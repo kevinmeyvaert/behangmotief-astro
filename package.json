@@ -39,6 +39,9 @@
     "path-to-regexp": "^8.3.0"
   },
   "knip": {
+    "entry": [
+      "src/lib/wannabes-image-service.ts"
+    ],
     "ignoreDependencies": [
       "@graphql-codegen/typescript-operations"
     ]

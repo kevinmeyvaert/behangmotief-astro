@@ -7,9 +7,40 @@ interface ImageTransformOptions {
   pixelDensity?: number;
 }
 
+export interface ParsedImageUrl {
+  path: string;
+  crop?: ImageTransformOptions['crop'];
+}
+
 export class ImageUrlBuilder {
   private static readonly BASE_URL = 'https://images.wannabes.be';
-  
+  private static readonly TRANSFORM_SEGMENT = /^[SFQ]=/;
+
+  /**
+   * Split a Wannabes URL back into its image path and crop mode, dropping any
+   * transform segments. Lets the image service re-derive sizes for `srcset`
+   * from URLs that already carry a baked-in width.
+   */
+  static parse(url: string): ParsedImageUrl | null {
+    if (!url.startsWith(`${this.BASE_URL}/`)) {
+      return null;
+    }
+
+    const segments = url.slice(this.BASE_URL.length + 1).split('/');
+    const path = segments.filter((segment) => !this.TRANSFORM_SEGMENT.test(segment)).join('/');
+    if (!path) {
+      return null;
+    }
+
+    const crop = segments
+      .find((segment) => segment.startsWith('S='))
+      ?.split(',')
+      .find((part) => part.startsWith('C='))
+      ?.slice(2) as ImageTransformOptions['crop'] | undefined;
+
+    return { path, crop };
+  }
+
   static build(imagePath: string, options: ImageTransformOptions = {}): string {
     const {
       width,

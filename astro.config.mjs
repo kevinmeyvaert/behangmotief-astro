@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig, passthroughImageService } from 'astro/config';
+import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
@@ -132,7 +132,14 @@ export default defineConfig({
   output: 'server',
   trailingSlash: isLocalDev ? 'ignore' : 'always',
   image: {
-    service: passthroughImageService(),
+    // Resolves to Wannabes CDN URLs directly, so images never pass through the
+    // server. See src/lib/wannabes-image-service.ts.
+    service: {
+      entrypoint: './src/lib/wannabes-image-service.ts',
+    },
+    layout: 'constrained',
+    responsiveStyles: true,
+    breakpoints: [640, 828, 1080, 1280, 1668, 2048, 2560],
     // images.wannabes.be redirects to r.wannabes.be; Astro validates the final
     // URL after redirects, so both hosts must be allowed.
     domains: ['images.wannabes.be', 'r.wannabes.be'],
