@@ -124,7 +124,7 @@ const { images } = Astro.props;
         prevSlide();
         stopAutoplay();
         // Track carousel navigation
-        (window as any).posthog?.capture('carousel_navigated', {
+        window.posthog?.capture('carousel_navigated', {
           direction: 'previous',
           from_index: fromIndex,
           to_index: currentIndex,
@@ -137,7 +137,7 @@ const { images } = Astro.props;
         nextSlide();
         stopAutoplay();
         // Track carousel navigation
-        (window as any).posthog?.capture('carousel_navigated', {
+        window.posthog?.capture('carousel_navigated', {
           direction: 'next',
           from_index: fromIndex,
           to_index: currentIndex,
