@@ -49,10 +49,8 @@ const publishedTime = Number.isNaN(publishedDate.getTime())
   ? undefined
   : publishedDate.toISOString();
 const publishedDateOnly = publishedTime?.split('T')[0];
-// The share card endpoint owns its own sizing, so hand it the plain photo URL.
-const albumOgImageSrc = post.images[0]
-  ? ImageUrlBuilder.build(post.images[0].hires)
-  : undefined;
+// Share on the album cover, the same photo the archive grid shows.
+const albumOgImageSrc = post.coverImage;
 const albumOgImageAlt = `${post.artist.name} at ${post.venue.name}`;
 
 // Generate ImageGallery structured data for the album

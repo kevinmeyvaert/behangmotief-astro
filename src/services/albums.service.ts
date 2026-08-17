@@ -1,4 +1,5 @@
 import { fetcher } from '@/lib/graphql-client';
+import { ImageUrlBuilder } from '@/lib/image-url-builder';
 import { POSTS, ALBUM, RELATED_ALBUMS } from '@/lib/queries';
 import type { AlbumPost } from '@/types/components';
 import type { AlbumQuery, RelatedPostsQuery, SearchQuery } from '@/types/wannabes.types';
@@ -16,6 +17,8 @@ interface RelatedAlbumsParams {
 
 type RelatedAlbum = RelatedPostsQuery['sameArtist']['data'][number];
 type AlbumDetail = AlbumQuery['post'];
+/** The album plus its resolved cover photo URL, used for the share card. */
+type AlbumDetailWithCover = AlbumDetail & { coverImage?: string };
 
 const isKevinPhoto = (photographer?: { firstName: string }) =>
   photographer?.firstName === 'Kevin';
@@ -47,9 +50,9 @@ class AlbumsService {
     };
   }
 
-  async getAlbumBySlug(slug: string): Promise<AlbumDetail | null> {
+  async getAlbumBySlug(slug: string): Promise<AlbumDetailWithCover | null> {
     const data = await fetcher<AlbumQuery>(ALBUM, { slug });
-    
+
     if (!data?.post) {
       return null;
     }
@@ -58,9 +61,16 @@ class AlbumsService {
       isKevinPhoto(img.photographer)
     );
 
+    // The album cover, unless it is another photographer's shot — the same rule
+    // the archive grid applies through checkThumbnails.
+    const coverImage = isKevinPhoto(data.post.thumbnail?.photographer)
+      ? data.post.thumbnail.resized
+      : kevinImages[0] && ImageUrlBuilder.build(kevinImages[0].hires);
+
     return {
       ...data.post,
-      images: kevinImages
+      images: kevinImages,
+      coverImage: coverImage || undefined
     };
   }
 
