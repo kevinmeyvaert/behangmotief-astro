@@ -146,6 +146,12 @@ export default defineConfig({
   },
   adapter: vercel({
     imageService: false,
+    isr: {
+      expiration: 60 * 60,
+      // Archive pages are search results and deliberately uncached; API routes
+      // must always run.
+      exclude: [/^\/nl\/archief/, /^\/en\/archive/, /^\/api\//],
+    },
     webAnalytics: {
       enabled: true,
     },
