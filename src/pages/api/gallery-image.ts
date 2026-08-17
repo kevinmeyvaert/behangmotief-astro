@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
+import { WANNABES_IMAGE_HOSTS } from '@/lib/image-url-builder';
 
-const ALLOWED_IMAGE_HOSTS = new Set(['images.wannabes.be', 'r.wannabes.be']);
+const ALLOWED_IMAGE_HOSTS = new Set<string>(WANNABES_IMAGE_HOSTS);
 
 function badRequest(message: string, status = 400) {
   return new Response(JSON.stringify({ error: message }), {

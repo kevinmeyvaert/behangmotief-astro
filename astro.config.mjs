@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import { WANNABES_IMAGE_HOSTS } from './src/lib/image-url-builder';
 import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
@@ -140,9 +141,9 @@ export default defineConfig({
     layout: 'constrained',
     responsiveStyles: true,
     breakpoints: [640, 828, 1080, 1280, 1668, 2048, 2560],
-    // images.wannabes.be redirects to r.wannabes.be; Astro validates the final
-    // URL after redirects, so both hosts must be allowed.
-    domains: ['images.wannabes.be', 'r.wannabes.be'],
+    // Astro validates the final URL after following redirects, so every CDN
+    // host has to be listed.
+    domains: [...WANNABES_IMAGE_HOSTS],
   },
   adapter: vercel({
     imageService: false,
