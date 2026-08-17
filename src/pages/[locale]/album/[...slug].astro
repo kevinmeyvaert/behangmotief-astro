@@ -106,7 +106,7 @@ const imageGallerySchema = getImageGallerySchema(
 
         <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-24">
           {
-            post.images.map((image) => (
+            post.images.map((image, index) => (
               <div
                 class="aspect-square overflow-hidden cursor-pointer"
                 style={{
@@ -126,7 +126,7 @@ const imageGallerySchema = getImageGallerySchema(
                   height={500}
                   blurhash={image.blurhash}
                   class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  loading="eager"
+                  priority={index < 5}
                 />
               </div>
             ))

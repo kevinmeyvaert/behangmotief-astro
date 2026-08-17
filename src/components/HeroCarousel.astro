@@ -24,7 +24,8 @@ const { images } = Astro.props;
               blurhash={image.blurhash}
               width={2500}
               height={2500}
-              loading={index === 0 || index === 1 ? 'eager' : 'lazy'}
+              layout="full-width"
+              priority={index === 0}
               containerClass="w-full h-full"
               class="w-full h-full object-cover"
             />

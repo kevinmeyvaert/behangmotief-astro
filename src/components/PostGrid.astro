@@ -8,11 +8,12 @@ import { ImageUrlBuilder } from '@/lib/image-url-builder';
 import type { AlbumPost } from '@/types/components';
 
 interface Props {
-  loading?: 'lazy' | 'eager';
+  /** How many leading thumbnails to treat as LCP candidates. */
+  priorityCount?: number;
   posts: AlbumPost[];
 }
 
-const { posts, loading = 'lazy' } = Astro.props;
+const { posts, priorityCount = 0 } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 const translatePath = useTranslatedPath(lang);
 const albumBasePath = `${translatePath('/album')}/`;
@@ -20,7 +21,7 @@ const albumBasePath = `${translatePath('/album')}/`;
 
 <MasonryGrid>
   {
-    posts.map(checkThumbnails).map((post) => {
+    posts.map(checkThumbnails).map((post, index) => {
       return (
         <a
           href={`${albumBasePath}${post.slug}/`}
@@ -39,7 +40,7 @@ const albumBasePath = `${translatePath('/album')}/`;
               alt={`${post.artist.name} at ${post.venue.name}`}
               width={post.thumbnail.dimensions.width}
               height={post.thumbnail.dimensions.height}
-              loading={loading}
+              priority={index < priorityCount}
               class="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105 md:transform md:scale-100"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-100">

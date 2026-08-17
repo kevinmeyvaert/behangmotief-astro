@@ -9,7 +9,9 @@ interface Props {
   blurhash: string;
   class?: string;
   containerClass?: string;
-  loading?: 'lazy' | 'eager';
+  /** Marks this as an LCP candidate: eager loading plus fetchpriority="high". */
+  priority?: boolean;
+  layout?: 'constrained' | 'full-width' | 'fixed' | 'none';
 }
 
 const {
@@ -20,7 +22,8 @@ const {
   blurhash,
   class: className = '',
   containerClass = '',
-  loading = 'lazy',
+  priority = false,
+  layout,
 } = Astro.props;
 const hasBlurhash = Boolean(blurhash && blurhash.length >= 6);
 ---
@@ -41,7 +44,8 @@ const hasBlurhash = Boolean(blurhash && blurhash.length >= 6);
     width={width}
     height={height}
     class={`relative ${className}`}
-    loading={loading}
+    priority={priority}
+    layout={layout}
     data-blurhash-image
   />
 </div>

@@ -67,7 +67,7 @@ const isPaginated = currentPage > 1;
         </p>
       </div>
     ) : (
-      <PostGrid posts={albums} loading="eager" />
+      <PostGrid posts={albums} priorityCount={4} />
     )}
 
     <div class="my-12">
