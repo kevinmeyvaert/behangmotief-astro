@@ -1,4 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["fra1"]
+  "regions": ["fra1"],
+  "redirects": [
+    {
+      "source": "/_astro/:name(hires-.+)_:hash(.+)",
+      "destination": "https://images.wannabes.be/:name.jpg",
+      "permanent": true
+    }
+  ]
 }
