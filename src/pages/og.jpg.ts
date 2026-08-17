@@ -11,7 +11,7 @@ export const prerender = false;
 // arbitrary hosts.
 const ALLOWED_HOSTS = new Set<string>(WANNABES_IMAGE_HOSTS);
 
-const LOGO_WIDTH = 520;
+const LOGO_WIDTH = 300;
 const OVERLAY_OPACITY = 0.6;
 
 let logo: Buffer | null | undefined;
