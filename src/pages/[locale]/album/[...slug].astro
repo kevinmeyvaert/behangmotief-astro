@@ -52,6 +52,10 @@ const publishedDateOnly = publishedTime?.split('T')[0];
 // Share on the album cover, the same photo the archive grid shows.
 const albumOgImageSrc = post.coverImage;
 const albumOgImageAlt = `${post.artist.name} at ${post.venue.name}`;
+const metaTitle = t('album.meta_title')
+  .replace('{artist}', post.artist.name)
+  .replace('{venue}', post.venue.name)
+  .replace('{date}', formatPostDate(post.date));
 
 // Generate ImageGallery structured data for the album
 const imageGallerySchema = getImageGallerySchema(
@@ -73,7 +77,7 @@ const imageGallerySchema = getImageGallerySchema(
 ---
 
 <Layout
-  title={`${post.artist.name} live at ${post.venue.name} | Behangmotief`}
+  title={metaTitle}
   description={description}
   locale={lang}
   ogType="article"
