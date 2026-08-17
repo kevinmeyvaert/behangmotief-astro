@@ -5,7 +5,7 @@ import { routes } from '@/i18n/ui';
 
 const siteMetadata = {
   name: 'Behangmotief',
-  url: 'https://behangmotief.be',
+  url: 'https://www.behangmotief.be',
   description: {
     nl: 'Professionele muziek- en festivalfotografie door Kevin Meyvaert. Gevestigd in Gent, België.',
     en: 'Professional music and festival photography by Kevin Meyvaert. Based in Gent, Belgium.',

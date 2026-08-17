@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
-const SITE_URL = 'https://behangmotief.be';
+const SITE_URL = 'https://www.behangmotief.be';
 const WANNABES_API_ENDPOINT = 'https://graphql.wannabes.be/graphql';
 const SITEMAP_PAGE_SIZE = 250;
 const SITEMAP_FETCH_TIMEOUT_MS = 12000;

@@ -40,7 +40,7 @@ const {
   publishedTime,
   modifiedTime,
 } = Astro.props;
-const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://behangmotief.be';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://www.behangmotief.be';
 const alternateUrls = getAlternateUrls(Astro.url, siteUrl);
 
 // Generate base structured data for all pages
