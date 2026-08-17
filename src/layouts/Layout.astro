@@ -66,7 +66,10 @@ const resolvedOgImageAlt = ogImageAlt
   || (lang === 'nl'
     ? 'Behangmotief portfolio van muziek- en festivalfotografie'
     : 'Behangmotief music and festival photography portfolio');
-const xDefaultUrl = `${siteUrl}/${defaultLang}/`;
+// x-default is a per-page fallback, so it has to be this page's default-locale
+// URL — pointing every page at the homepage invalidates the hreflang cluster.
+const xDefaultUrl =
+  alternateUrls[localeToHreflang[defaultLang]] ?? `${siteUrl}/${defaultLang}/`;
 
 const baseStructuredData = [
   getPersonSchema(lang),
@@ -120,7 +123,7 @@ const baseStructuredData = [
     {Object.entries(alternateUrls).map(([hreflang, url]) => (
       <link rel="alternate" hreflang={hreflang} href={url} />
     ))}
-    {/* x-default pointing to the default language (Dutch) */}
+    {/* x-default pointing to this page's Dutch variant */}
     <link rel="alternate" hreflang="x-default" href={xDefaultUrl} />
 
     {/* Base structured data: Person, Organization, WebSite */}
