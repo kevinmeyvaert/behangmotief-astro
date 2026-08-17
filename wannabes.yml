@@ -10,5 +10,7 @@ generates:
     config:
       avoidOptionals: true
       maybeValue: "T"
+      scalars:
+        Date: string
       namingConvention:
         enumValues: keep

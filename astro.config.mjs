@@ -133,7 +133,9 @@ export default defineConfig({
   trailingSlash: isLocalDev ? 'ignore' : 'always',
   image: {
     service: passthroughImageService(),
-    domains: ['images.wannabes.be'],
+    // images.wannabes.be redirects to r.wannabes.be; Astro validates the final
+    // URL after redirects, so both hosts must be allowed.
+    domains: ['images.wannabes.be', 'r.wannabes.be'],
   },
   adapter: vercel({
     imageService: false,
