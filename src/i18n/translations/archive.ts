@@ -3,6 +3,7 @@ export const archive = {
     "archive.title": "Archive | Behangmotief — Music & festival photographer",
     "archive.description":
       "Search photos by artist, venue or festival. Go through my archive of over 6 years of music photography.",
+    "archive.heading": "Concert & festival photo archive",
     "archiveSection.title": "Browse the Archive",
     "archiveSection.description":
       "Search photos by artist, venue or festival. Go through my archive of over 6 years of music photography.",
@@ -14,6 +15,7 @@ export const archive = {
     "archive.title": "Archief | Behangmotief — Muziek & festivalfotograaf",
     "archive.description":
       "Zoek foto's op artiest, locatie of festival. Doorloop mijn archief van meer dan 6 jaar muziekfotografie.",
+    "archive.heading": "Concert- & festivalfoto archief",
     "archiveSection.title": "Doorzoek het archief",
     "archiveSection.description":
       "Zoek foto's op artiest, locatie of festival. Doorloop mijn archief van meer dan 6 jaar muziekfotografie.",

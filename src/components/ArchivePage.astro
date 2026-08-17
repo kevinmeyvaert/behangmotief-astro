@@ -57,6 +57,7 @@ const isPaginated = currentPage > 1;
 
   <Header />
   <main class="container mx-auto px-4 md:px-0 py-8">
+    <h1 class="text-3xl font-bold mb-8">{t('archive.heading')}</h1>
     <SearchField currentSearch={searchParam} archiveRoute={archiveRoute} />
 
     {searchParam && albums.length === 0 ? (
