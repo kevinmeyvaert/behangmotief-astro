@@ -6,6 +6,7 @@ import StructuredData from '@/components/StructuredData.astro';
 import PostHog from '@/components/PostHog.astro';
 import '../styles/global.css';
 import { getAlternateUrls, localeToHreflang } from '@/i18n/utils';
+import { OG_IMAGE_HEIGHT, OG_IMAGE_TYPE, OG_IMAGE_WIDTH, ogImageUrl } from '@/lib/og';
 import { defaultLang } from '@/i18n/ui';
 import {
   getPersonSchema,
@@ -20,7 +21,8 @@ interface Props {
   canonicalUrl?: string;
   noindex?: boolean;
   ogType?: 'website' | 'article';
-  ogImage?: string;
+  /** Photo to use as the share card background. Omit for the brand default. */
+  ogImageSrc?: string;
   ogImageAlt?: string;
   publishedTime?: string;
   modifiedTime?: string;
@@ -33,7 +35,7 @@ const {
   canonicalUrl,
   noindex = false,
   ogType = 'website',
-  ogImage,
+  ogImageSrc,
   ogImageAlt,
   publishedTime,
   modifiedTime,
@@ -59,9 +61,7 @@ const ogLocaleAlternates = Object.values(localeToHreflang)
   .filter((value) => value !== localeToHreflang[lang])
   .map((value) => value.replace('-', '_'));
 const htmlLang = localeToHreflang[lang] || locale;
-const resolvedOgImage = ogImage
-  ? new URL(ogImage, siteUrl).toString()
-  : `${siteUrl}/profile.jpg`;
+const resolvedOgImage = new URL(ogImageUrl(ogImageSrc), siteUrl).toString();
 const resolvedOgImageAlt = ogImageAlt
   || (lang === 'nl'
     ? 'Behangmotief portfolio van muziek- en festivalfotografie'
@@ -98,6 +98,9 @@ const baseStructuredData = [
       <meta property="og:locale:alternate" content={value} />
     ))}
     <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:image:type" content={OG_IMAGE_TYPE} />
+    <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+    <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
     <meta property="og:image:alt" content={resolvedOgImageAlt} />
 
     <meta name="twitter:card" content="summary_large_image" />

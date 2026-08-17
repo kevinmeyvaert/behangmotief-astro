@@ -49,8 +49,9 @@ const publishedTime = Number.isNaN(publishedDate.getTime())
   ? undefined
   : publishedDate.toISOString();
 const publishedDateOnly = publishedTime?.split('T')[0];
-const albumOgImage = post.images[0]
-  ? ImageUrlBuilder.hero(post.images[0].hires)
+// The share card endpoint owns its own sizing, so hand it the plain photo URL.
+const albumOgImageSrc = post.images[0]
+  ? ImageUrlBuilder.build(post.images[0].hires)
   : undefined;
 const albumOgImageAlt = `${post.artist.name} at ${post.venue.name}`;
 
@@ -78,7 +79,7 @@ const imageGallerySchema = getImageGallerySchema(
   description={description}
   locale={lang}
   ogType="article"
-  ogImage={albumOgImage}
+  ogImageSrc={albumOgImageSrc}
   ogImageAlt={albumOgImageAlt}
   publishedTime={publishedTime}
 >
