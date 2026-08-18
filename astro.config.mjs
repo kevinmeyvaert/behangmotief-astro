@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 const SITE_URL = 'https://www.behangmotief.be';
 const WANNABES_API_ENDPOINT = 'https://graphql.wannabes.be/graphql';
 const SITEMAP_PAGE_SIZE = 250;
-const SITEMAP_FETCH_TIMEOUT_MS = 12000;
+const SITEMAP_FETCH_TIMEOUT_MS = 60000;
 const SITEMAP_FETCH_RETRIES = 3;
 
 const SITEMAP_ALBUMS_QUERY = `
@@ -123,7 +123,15 @@ async function getAlbumSitemapPages() {
   });
 }
 
-const albumSitemapPages = await getAlbumSitemapPages();
+// A sitemap missing its album URLs is recoverable on the next deploy; a build
+// that cannot start is not. Never let the upstream API block shipping.
+let albumSitemapPages = [];
+try {
+  albumSitemapPages = await getAlbumSitemapPages();
+} catch (error) {
+  const message = error instanceof Error ? error.message : String(error);
+  console.warn(`[sitemap] Album URLs omitted from the sitemap: ${message}`);
+}
 
 const isLocalDev = process.env.npm_lifecycle_event === 'dev';
 
