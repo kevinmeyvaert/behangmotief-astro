@@ -10,6 +10,8 @@ import StructuredData from '@/components/StructuredData.astro';
 import { formatPostDate } from '@/lib/date';
 import { ImageUrlBuilder } from '@/lib/image-url-builder';
 import { getImageGallerySchema } from '@/lib/site-metadata';
+import { UpstreamUnavailableError } from '@/lib/graphql-client';
+import { serviceUnavailable } from '@/lib/http';
 
 // Cached at the edge rather than via the adapter's ISR option: ISR keys on path
 // only, and its `exclude` list emits routes without the configured trailing
@@ -35,7 +37,15 @@ if (!slugPath) {
 }
 
 // Fetch the album data using the service
-const post = await albumsService.getAlbumBySlug(slugPath);
+let post;
+try {
+  post = await albumsService.getAlbumBySlug(slugPath);
+} catch (error) {
+  if (error instanceof UpstreamUnavailableError) {
+    return serviceUnavailable();
+  }
+  throw error;
+}
 if (!post) {
   return new Response(null, {
     status: 404,

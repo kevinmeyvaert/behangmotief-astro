@@ -123,17 +123,23 @@ async function getAlbumSitemapPages() {
   });
 }
 
+const isLocalDev = process.env.npm_lifecycle_event === 'dev';
+
+// Only the build emits a sitemap, and this fetch walks every album, so skip it
+// in dev — otherwise a slow API delays server start by minutes.
 // A sitemap missing its album URLs is recoverable on the next deploy; a build
 // that cannot start is not. Never let the upstream API block shipping.
+/** @type {string[]} */
 let albumSitemapPages = [];
-try {
-  albumSitemapPages = await getAlbumSitemapPages();
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
-  console.warn(`[sitemap] Album URLs omitted from the sitemap: ${message}`);
+if (!isLocalDev) {
+  try {
+    albumSitemapPages = await getAlbumSitemapPages();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`[sitemap] Album URLs omitted from the sitemap: ${message}`);
+  }
 }
 
-const isLocalDev = process.env.npm_lifecycle_event === 'dev';
 
 // https://astro.build/config
 export default defineConfig({

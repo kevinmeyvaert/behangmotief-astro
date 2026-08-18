@@ -12,10 +12,19 @@ interface Props {
 
 const { post, locale } = Astro.props;
 
-const { sameArtist, sameVenue } = await albumsService.getRelatedAlbums({
-  artistSlug: post.artist.slug,
-  venueSlug: post.venue.slug,
-});
+// Supplementary island: an outage should cost the reader these suggestions,
+// not the album page they came for.
+let sameArtist: Awaited<ReturnType<typeof albumsService.getRelatedAlbums>>['sameArtist'] = [];
+let sameVenue: Awaited<ReturnType<typeof albumsService.getRelatedAlbums>>['sameVenue'] = [];
+try {
+  ({ sameArtist, sameVenue } = await albumsService.getRelatedAlbums({
+    artistSlug: post.artist.slug,
+    venueSlug: post.venue.slug,
+  }));
+} catch {
+  sameArtist = [];
+  sameVenue = [];
+}
 const hasMoreFromArtist = sameArtist.length - 1 > 0;
 const hasMoreAtVenue = sameVenue.length - 1 > 0;
 

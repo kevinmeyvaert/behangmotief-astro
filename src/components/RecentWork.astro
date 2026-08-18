@@ -10,7 +10,14 @@ interface Props {
 
 const { locale } = Astro.props;
 
-const posts = await albumsService.getRecentAlbums(6);
+// A deferred island on an otherwise static page: if the API is down, drop the
+// section rather than failing the homepage around it.
+let posts: Awaited<ReturnType<typeof albumsService.getRecentAlbums>> = [];
+try {
+  posts = await albumsService.getRecentAlbums(6);
+} catch {
+  posts = [];
+}
 
 const t = useTranslations(locale);
 ---

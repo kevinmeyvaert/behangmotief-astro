@@ -1,7 +1,7 @@
 ---
 import Layout from '@/layouts/Layout.astro';
 import { useTranslatedPath, useTranslations } from '@/i18n/utils';
-import { albumsService } from '@/services/albums.service';
+import { POSTS_PER_PAGE, type ArchiveData } from '@/lib/archive';
 import PostGrid from '@/components/PostGrid.astro';
 import Pagination from '@/components/Pagination.astro';
 import Header from '@/components/Header.astro';
@@ -11,31 +11,22 @@ import { getCollectionPageSchema } from '@/lib/site-metadata';
 
 interface Props {
   locale: 'en' | 'nl';
-  page?: string;
+  /** Null when the album API is unreachable; the page has already set 503. */
+  archive: ArchiveData | null;
 }
 
-const { locale, page } = Astro.props;
+const { locale, archive } = Astro.props;
 
 Astro.response.headers.set('Cache-Control', 'private, no-store, max-age=0');
 
 const t = useTranslations(locale);
 const translatePath = useTranslatedPath(locale);
 
-const searchParam = Astro.url.searchParams.get('search') || '';
-const pageFromPath = page ? Number.parseInt(page, 10) : Number.NaN;
-const pageFromQuery = Number.parseInt(
-  Astro.url.searchParams.get('page') || '1',
-  10
-);
-const rawCurrentPage = Number.isFinite(pageFromPath) ? pageFromPath : pageFromQuery;
-const currentPage = Number.isFinite(rawCurrentPage) && rawCurrentPage > 0 ? rawCurrentPage : 1;
-const POSTS_PER_PAGE = 15;
-
-const { albums, pagination } = await albumsService.searchAlbums({
-  start: (currentPage - 1) * POSTS_PER_PAGE,
-  limit: POSTS_PER_PAGE,
-  searchTerm: searchParam || undefined,
-});
+const searchParam = archive?.searchTerm ?? '';
+const currentPage = archive?.currentPage ?? 1;
+const albums = archive?.albums ?? [];
+const pagination = archive?.pagination ?? { start: 0, limit: POSTS_PER_PAGE, total: 0 };
+const upstreamDown = archive === null;
 
 const totalPages = Math.ceil(pagination.total / POSTS_PER_PAGE);
 const archiveRoute = `${translatePath('/archive')}/`;
@@ -60,7 +51,12 @@ const isPaginated = currentPage > 1;
     <h1 class="text-3xl font-bold mb-8">{t('archive.heading')}</h1>
     <SearchField currentSearch={searchParam} archiveRoute={archiveRoute} />
 
-    {searchParam && albums.length === 0 ? (
+    {upstreamDown ? (
+      <div class="text-center py-16">
+        <h2 class="text-2xl font-bold mb-4">{t('archive.unavailable.title')}</h2>
+        <p class="text-gray-600 max-w-md mx-auto">{t('archive.unavailable.message')}</p>
+      </div>
+    ) : searchParam && albums.length === 0 ? (
       <div class="text-center py-16">
         <h2 class="text-2xl font-bold mb-4">{t('search.no.results.title')}</h2>
         <p class="text-gray-600 max-w-md mx-auto">
@@ -71,7 +67,7 @@ const isPaginated = currentPage > 1;
       <PostGrid posts={albums} priorityCount={4} />
     )}
 
-    <div class="my-12">
+    <div class="my-12" hidden={upstreamDown}>
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
