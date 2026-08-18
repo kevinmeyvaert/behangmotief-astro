@@ -11,6 +11,14 @@ import { formatPostDate } from '@/lib/date';
 import { ImageUrlBuilder } from '@/lib/image-url-builder';
 import { getImageGallerySchema } from '@/lib/site-metadata';
 
+// Cached at the edge rather than via the adapter's ISR option: ISR keys on path
+// only, and its `exclude` list emits routes without the configured trailing
+// slash, which 404s every page it is meant to keep fresh.
+Astro.response.headers.set(
+  'Cache-Control',
+  'public, s-maxage=3600, stale-while-revalidate=86400'
+);
+
 const { slug } = Astro.params;
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);

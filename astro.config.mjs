@@ -147,13 +147,6 @@ export default defineConfig({
   },
   adapter: vercel({
     imageService: false,
-    isr: {
-      expiration: 60 * 60,
-      // Archive pages are search results and deliberately uncached; API routes
-      // must always run. /og.jpg is keyed on its src, so its own immutable
-      // Cache-Control beats ISR's expiry window.
-      exclude: [/^\/nl\/archief/, /^\/en\/archive/, /^\/api\//, '/og.jpg'],
-    },
     webAnalytics: {
       enabled: true,
     },
